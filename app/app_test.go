@@ -30,7 +30,7 @@ func TestBilibili(t *testing.T) {
 
 		message, ok := result["message"].(string)
 		assert.True(t, ok)
-		assert.Equal(t, "哔哩哔哩", message)
+		assert.Equal(t, "bilibili", message)
 	}
 }
 
@@ -56,7 +56,7 @@ func TestZhihu(t *testing.T) {
 
 		message, ok := result["message"].(string)
 		assert.True(t, ok)
-		assert.Equal(t, "知乎", message)
+		assert.Equal(t, "zhihu", message)
 	}
 }
 
