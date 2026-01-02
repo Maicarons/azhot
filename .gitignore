@@ -1,0 +1,29 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+**/.DS_Store
+
+# Test binary, build with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Project-specific binaries
+bin/
+tmp/
+
+# IDE
+.vscode/
+.idea/
+
+# Environment specific
+**/.env
+
+**/*.db
+
+frontend/node_modules/

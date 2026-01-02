@@ -1,0 +1,47 @@
+# .air.toml
+# Config file for air command
+
+[build]
+  # 命令：构建过程
+  cmd = "go build -o tmp/go_build_api.exe ."
+  # 二进制文件路径
+  bin = "tmp/go_build_api.exe"
+  # 包含的文件扩展名
+  include_ext = ["go", "tpl", "tmpl", "html", "env", "yaml", "yml", "json"]
+  # 排除的目录
+  exclude_dir = ["assets", "tmp", "vendor", "node_modules", "docs", ".git"]
+  # 排除的文件扩展名
+  exclude_ext = ["air.conf", "air.toml", ".air.toml", "tmp", "pid"]
+  # 构建延迟时间（毫秒）
+  delay = 1000
+  # 最大构建次数
+  stop_on_error = false
+  # 当文件变化时是否发送通知
+  send_interrupt = true
+  # 当程序崩溃时是否重启
+  kill_delay = "0s"
+  # 监听的文件扩展名
+  include_dir = []
+  # 忽略的正则表达式
+  exclude_regex = ["_test.go", ".*docs.*"]
+
+[run]
+  # 运行命令
+  bin = "tmp/go_build_api.exe"
+  # 运行命令的额外参数
+  args_bin = []
+
+[log]
+  # 日志文件路径
+  time = false
+
+[color]
+  # 是否使用颜色
+  main = "magenta"
+  runner = "green"
+  build = "yellow"
+  watcher = "cyan"
+
+[misc]
+  # 是否在程序结束后清理临时文件
+  clean_on_exit = true

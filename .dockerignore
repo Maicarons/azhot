@@ -1,0 +1,48 @@
+# .dockerignore file for azhot Go application
+
+# 忽略.git目录
+.git
+.gitignore
+
+# 忽略IDE和编辑器文件
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# 忽略构建输出目录
+build/
+dist/
+
+# 忽略前端开发文件（前端构建输出会被包含在Go应用中）
+frontend/node_modules/
+frontend/src/
+frontend/public/
+frontend/.vite/
+frontend/.nuxt/
+frontend/.next/
+
+# 忽略测试和开发相关文件
+coverage.out
+*.test
+test/
+
+# 忽略操作系统文件
+.DS_Store
+Thumbs.db
+
+# 忽略本地配置文件
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 忽略Go开发文件
+.vscode/
+.golangci.yml
+*.log
+
+# 忽略pnpm相关文件
+frontend/pnpm-lock.yaml
+frontend/.npmrc

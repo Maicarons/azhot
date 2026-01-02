@@ -1,0 +1,39 @@
+{
+  "name": "azhot",
+  "version": "1.0.0",
+  "description": "azhot",
+  "main": "src/main.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "vue",
+    "element-plus",
+    "hot-search",
+    "api",
+    "typescript"
+  ],
+  "author": "",
+  "license": "AGPL-3.0-only",
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.2",
+    "@vue/cli-service": "^5.0.9",
+    "axios": "^1.13.2",
+    "element-plus": "^2.13.0",
+    "typescript": "^5.0.0",
+    "vue": "^3.5.26",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.3",
+    "unplugin-auto-import": "^20.3.0",
+    "unplugin-vue-components": "^30.0.0",
+    "vite": "^7.3.0",
+    "@vue/tsconfig": "^0.8.1",
+    "@types/node": "^18.11.12",
+    "unocss": "^66.5.12"
+  },
+  "packageManager": "pnpm@10.5.2"
+}

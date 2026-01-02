@@ -1,0 +1,785 @@
+basePath: /
+info:
+  contact:
+    name: API Support
+    url: https://github.com/maicarons/azhot/issues
+  description: 热搜API聚合服务，提供各大平台热搜数据获取接口
+  license:
+    name: AGPL-3.0
+    url: https://github.com/maicarons/azhot/blob/main/LICENSE
+  termsOfService: https://github.com/maicarons/azhot
+  title: azhot
+  version: 1.0.0
+paths:
+  /360doc:
+    get:
+      consumes:
+      - application/json
+      description: 获取360doc热门文章列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取360doc热搜数据
+      tags:
+      - doc360
+  /360search:
+    get:
+      consumes:
+      - application/json
+      description: 获取360搜索热点排行榜
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取360搜索热搜数据
+      tags:
+      - search360
+  /acfun:
+    get:
+      consumes:
+      - application/json
+      description: 获取AcFun热门排行榜
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取AcFun热搜数据
+      tags:
+      - acfun
+  /all:
+    get:
+      consumes:
+      - application/json
+      description: 获取所有平台的热搜列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取所有平台热搜数据
+      tags:
+      - all
+  /baidu:
+    get:
+      consumes:
+      - application/json
+      description: 获取百度热搜列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取百度热搜数据
+      tags:
+      - baidu
+  /bilibili:
+    get:
+      consumes:
+      - application/json
+      description: 获取哔哩哔哩热门视频列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取哔哩哔哩热搜数据
+      tags:
+      - bilibili
+  /cctv:
+    get:
+      consumes:
+      - application/json
+      description: 获取CCTV新闻热点排行榜
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取CCTV新闻热搜数据
+      tags:
+      - cctv
+  /csdn:
+    get:
+      consumes:
+      - application/json
+      description: 获取CSDN热门博客文章排行榜
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取CSDN热搜数据
+      tags:
+      - csdn
+  /dongqiudi:
+    get:
+      consumes:
+      - application/json
+      description: 获取懂球帝热门体育资讯排行榜
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取懂球帝热搜数据
+      tags:
+      - dongqiudi
+  /douban:
+    get:
+      consumes:
+      - application/json
+      description: 获取豆瓣热门搜索列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取豆瓣热搜数据
+      tags:
+      - douban
+  /douyin:
+    get:
+      consumes:
+      - application/json
+      description: 获取抖音热搜列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取抖音热搜数据
+      tags:
+      - douyin
+  /github:
+    get:
+      consumes:
+      - application/json
+      description: 获取GitHub Trending列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取GitHub Trending数据
+      tags:
+      - github
+  /guojiadili:
+    get:
+      consumes:
+      - application/json
+      description: 获取国家地理热门文章排行榜
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取国家地理热搜数据
+      tags:
+      - guojiadili
+  /history/{source}:
+    get:
+      consumes:
+      - application/json
+      description: 获取指定来源的最新历史热搜数据
+      parameters:
+      - description: 数据源名称
+        in: path
+        name: source
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取指定来源的最新历史数据
+      tags:
+      - HistoryAPI
+  /history/{source}/{date}:
+    get:
+      consumes:
+      - application/json
+      description: 获取指定日期的所有小时的历史热搜数据
+      parameters:
+      - description: 数据源名称
+        in: path
+        name: source
+        required: true
+        type: string
+      - description: 日期，格式：YYYY-MM-DD
+        in: path
+        name: date
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取指定日期的所有小时数据
+      tags:
+      - HistoryAPI
+  /history/{source}/{date}/{hour}:
+    get:
+      consumes:
+      - application/json
+      description: 获取指定日期和小时的历史热搜数据
+      parameters:
+      - description: 数据源名称
+        in: path
+        name: source
+        required: true
+        type: string
+      - description: 日期，格式：YYYY-MM-DD
+        in: path
+        name: date
+        required: true
+        type: string
+      - description: 小时，0-23
+        in: path
+        name: hour
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取指定日期和小时的历史数据
+      tags:
+      - HistoryAPI
+  /historytoday:
+    get:
+      consumes:
+      - application/json
+      description: 获取历史上的今天事件列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取历史上的今天数据
+      tags:
+      - historytoday
+  /hupu:
+    get:
+      consumes:
+      - application/json
+      description: 获取虎扑热门体育资讯排行榜
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取虎扑热搜数据
+      tags:
+      - hupu
+  /ithome:
+    get:
+      consumes:
+      - application/json
+      description: 获取IT之家热搜列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取IT之家热搜数据
+      tags:
+      - ithome
+  /lishipin:
+    get:
+      consumes:
+      - application/json
+      description: 获取梨视频热门视频排行榜
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取梨视频热搜数据
+      tags:
+      - lishipin
+  /list:
+    get:
+      consumes:
+      - application/json
+      description: 获取所有可用的热搜来源名称列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取所有可用的来源列表
+      tags:
+      - list
+  /nanfangzhoumo:
+    get:
+      consumes:
+      - application/json
+      description: 获取南方周末热门内容排行榜
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取南方周末热搜数据
+      tags:
+      - nanfangzhoumo
+  /pengpai:
+    get:
+      consumes:
+      - application/json
+      description: 获取澎湃新闻热点新闻排行榜
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取澎湃新闻热搜数据
+      tags:
+      - pengpai
+  /qqnews:
+    get:
+      consumes:
+      - application/json
+      description: 获取腾讯新闻热点排行榜
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取腾讯新闻热搜数据
+      tags:
+      - qqnews
+  /quark:
+    get:
+      consumes:
+      - application/json
+      description: 获取夸克热点搜索排行榜
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取夸克热搜数据
+      tags:
+      - quark
+  /renmin:
+    get:
+      consumes:
+      - application/json
+      description: 获取人民网热门新闻排行榜
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取人民网热搜数据
+      tags:
+      - renmin
+  /shaoshupai:
+    get:
+      consumes:
+      - application/json
+      description: 获取少数派热门文章排行榜
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取少数派热搜数据
+      tags:
+      - shaoshupai
+  /sougou:
+    get:
+      consumes:
+      - application/json
+      description: 获取搜狗热点搜索排行榜
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取搜狗热搜数据
+      tags:
+      - sougou
+  /souhu:
+    get:
+      consumes:
+      - application/json
+      description: 获取搜狐热点新闻排行榜
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取搜狐热搜数据
+      tags:
+      - souhu
+  /toutiao:
+    get:
+      consumes:
+      - application/json
+      description: 获取今日头条热搜列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取今日头条热搜数据
+      tags:
+      - toutiao
+  /v2ex:
+    get:
+      consumes:
+      - application/json
+      description: 获取V2EX热议话题列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取V2EX热搜数据
+      tags:
+      - v2ex
+  /wangyinews:
+    get:
+      consumes:
+      - application/json
+      description: 获取网易新闻热点排行榜
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取网易新闻热搜数据
+      tags:
+      - wangyinews
+  /weibo:
+    get:
+      consumes:
+      - application/json
+      description: 获取微博热搜列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取微博热搜数据
+      tags:
+      - weibo
+  /xinjingbao:
+    get:
+      consumes:
+      - application/json
+      description: 获取新京报热点新闻排行榜
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取新京报热搜数据
+      tags:
+      - xinjingbao
+  /zhihu:
+    get:
+      consumes:
+      - application/json
+      description: 获取知乎热搜列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取知乎热搜数据
+      tags:
+      - zhihu
+schemes:
+- http
+- https
+swagger: "2.0"
