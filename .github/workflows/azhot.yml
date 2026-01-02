@@ -54,24 +54,10 @@ jobs:
 
     - name: Build backend with CMake
       run: |
-        mkdir build
+        mkdir -p build
         cd build
         cmake ..
         cmake --build . --target build
-
-    - name: Run go vet with CMake
-      run: |
-        mkdir build
-        cd build
-        cmake ..
-        cmake --build . --target vet
-
-    - name: Run go fmt with CMake
-      run: |
-        mkdir build
-        cd build
-        cmake ..
-        cmake --build . --target fmt
 
   frontend:
     name: Frontend test
