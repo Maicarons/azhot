@@ -6,6 +6,10 @@
   <img src="https://cdn-icons-png.flaticon.com/512/3199/3199306.png" alt="Logo" width="128" height="128" />
 </p>
 
+<p align="center">
+  <img src="banner.jpg" alt="Banner" style="max-width:100%;height:auto;" />
+</p>
+
 [![Version Go](https://img.shields.io/badge/Go-%3E%3D1.18-blue)](https://golang.org/)
 [![Licence](https://img.shields.io/github/license/maicarons/azhot)](LICENSE)
 [![Statut de construction](https://img.shields.io/badge/build-passing-brightgreen)](https://golang.org/)

@@ -1,5 +1,9 @@
 # Docker 部署说明
 
+<p align="center">
+  <img src="banner.jpg" alt="Banner" style="max-width:100%;height:auto;" />
+</p>
+
 ## 概述
 
 本项目支持使用 Docker 容器化部署，提供了灵活的配置选项以适应不同的部署需求。

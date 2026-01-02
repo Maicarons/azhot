@@ -1,5 +1,9 @@
 # AI Model Context Protocol (MCP) 服务器集成
 
+<p align="center">
+  <img src="../banner.jpg" alt="Banner" style="max-width:100%;height:auto;" />
+</p>
+
 ## 概述
 
 本项目现在集成了AI Model Context Protocol (MCP) 服务器，允许AI模型和智能助手通过标准化的协议访问热搜数据。MCP是一种开放协议，为AI模型提供了一种标准化的方式与外部工具、API和数据源进行交互。

@@ -1,5 +1,9 @@
 # azhot
 
+<p align="center">
+  <img src="../banner.jpg" alt="Banner" style="max-width:100%;height:auto;" />
+</p>
+
 azhot 是一个聚合各大平台热搜数据的前端项目，提供统一的界面浏览各大平台的实时热搜榜单。
 
 ## 项目介绍
