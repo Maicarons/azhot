@@ -1,0 +1,101 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+
+    - name: Set up Go
+      uses: actions/setup-go@v6
+      with:
+        go-version: '1.24.x'
+        cache: true
+
+    - name: Install CMake
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake
+
+    - name: Get tag
+      id: tag
+      run: |
+        TAG=${GITHUB_REF#refs/tags/}
+        echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+    - name: Run tests with CMake
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+        cmake --build . --target test-all
+
+    - name: Build with CMake for all platforms
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+        cmake --build . --target package
+
+    - name: Generate release notes
+      run: |
+        # Generate changelog from git commits
+        git log --oneline $(git describe --tags --abbrev=0 $(git describe --tags --abbrev=0)^) $(git describe --tags --abbrev=0) > RELEASE_NOTES.md
+        echo "" >> RELEASE_NOTES.md
+        echo "# What's Changed" >> RELEASE_NOTES.md
+        git log --pretty=format:"- %s (%h)" $(git describe --tags --abbrev=0 $(git describe --tags --abbrev=0)^)..$(git.describe --tags --abbrev=0) >> RELEASE_NOTES.md
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body_path: RELEASE_NOTES.md
+        draft: false
+        prerelease: false
+
+    - name: Upload Linux binary
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/linux-amd64/azhot
+        asset_name: azhot_linux_amd64
+        asset_content_type: application/octet-stream
+
+    - name: Upload Windows binary
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/windows-amd64/azhot.exe
+        asset_name: azhot_windows_amd64.exe
+        asset_content_type: application/octet-stream
+        
+    - name: Upload macOS binary
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/darwin-amd64/azhot
+        asset_name: azhot_darwin_amd64
+        asset_content_type: application/octet-stream

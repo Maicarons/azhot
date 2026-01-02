@@ -27,3 +27,6 @@ tmp/
 **/*.db
 
 frontend/node_modules/
+
+dist/
+build/

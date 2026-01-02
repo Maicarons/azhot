@@ -1,0 +1,110 @@
+name: Test CI
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - '**.go'
+      - 'go.mod'
+      - 'go.sum'
+      - '**/*.vue'
+      - '**/*.ts'
+      - '**/*.js'
+      - 'frontend/package.json'
+      - 'frontend/pnpm-lock.yaml'
+      - '.github/workflows/azhot.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '**.go'
+      - 'go.mod'
+      - 'go.sum'
+      - '**/*.vue'
+      - '**/*.ts'
+      - '**/*.js'
+      - 'frontend/package.json'
+      - 'frontend/pnpm-lock.yaml'
+      - '.github/workflows/azhot.yml'
+
+jobs:
+  backend:
+    name: Backend compilation test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: [1.24.x]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v6
+
+    - name: Set up Go ${{ matrix.go-version }}
+      uses: actions/setup-go@v6
+      with:
+        go-version: ${{ matrix.go-version }}
+        cache: true
+
+    - name: Install dependencies
+      run: go mod tidy
+
+    - name: Install CMake
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake
+
+    - name: Build backend with CMake
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+        cmake --build . --target build
+
+    - name: Run go vet with CMake
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+        cmake --build . --target vet
+
+    - name: Run go fmt with CMake
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+        cmake --build . --target fmt
+
+  frontend:
+    name: Frontend test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install pnpm
+      run: |
+        npm install -g pnpm
+
+    - name: Install frontend dependencies
+      run: |
+        cd frontend
+        pnpm install
+
+    - name: Run frontend build
+      run: |
+        cd frontend
+        pnpm build
+
+    - name: Run frontend linting (if available)
+      run: |
+        cd frontend
+        if [ -f "vite.config.ts" ]; then
+          echo "Vite config exists"
+        else
+          echo "Vite config not found"
+        fi

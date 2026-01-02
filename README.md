@@ -320,12 +320,67 @@ curl -X POST http://localhost:8080/mcp/tool/execute \
 ```bash
 # 运行测试
 dev.sh # 使用Air作为热重启调试工具
+```
 
-# 代码格式化
-make fmt
+## CMake构建系统
 
-# 检查代码问题
-make vet
+项目现在支持使用CMake进行构建，支持Windows和Linux平台。
+
+### 构建命令
+
+```bash
+# 构建当前平台
+mkdir build && cd build
+cmake ..
+cmake --build . --target build
+
+# 运行
+cmake --build . --target run
+
+# 开发模式运行
+cmake --build . --target dev
+
+# 跨平台构建（预定义平台）
+cmake --build . --target build-platform-linux
+cmake --build . --target build-platform-windows
+cmake --build . --target build-platform-darwin
+cmake --build . --target build-platform-linux-arm64
+cmake --build . --target build-platform-windows-arm64
+
+# 跨平台构建（使用脚本）
+# Linux/macOS:
+./build_platform.sh linux
+./build_platform.sh windows
+./build_platform.sh darwin
+
+# Windows:
+build_platform.bat linux
+build_platform.bat windows
+build_platform.bat darwin
+
+# 打包（为所有支持的平台创建zip包）
+cmake --build . --target package
+
+# 清理构建产物
+cmake --build . --target azhot_clean
+
+# 运行测试
+cmake --build . --target test
+
+# 运行所有测试
+cmake --build . --target test-all
+
+# 格式化代码
+cmake --build . --target fmt
+
+# 整理依赖
+cmake --build . --target tidy
+
+# 静态分析
+cmake --build . --target staticcheck
+
+# 构建CI版本（不生成swagger文档）
+cmake --build . --target build-ci
 ```
 
 ## 许可证
