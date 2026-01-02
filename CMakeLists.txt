@@ -131,6 +131,13 @@ add_custom_target(fmt
     COMMENT "Formatting code..."
 )
 
+# 添加自定义目标：vet
+add_custom_target(vet
+    COMMAND go vet ./...
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMENT "Running go vet..."
+)
+
 # 添加自定义目标：依赖整理
 add_custom_target(tidy
     COMMAND go mod tidy

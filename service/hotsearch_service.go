@@ -145,78 +145,54 @@ func (s *HotSearchService) StartScheduler() {
 	}()
 }
 
+// apiFunctionMap 将路由名称映射到API函数
+var apiFunctionMap = map[string]func() (map[string]interface{}, error){
+	"360search":  app.Search360,
+	"bilibili":   app.Bilibili,
+	"acfun":      app.Acfun,
+	"csdn":       app.CSDN,
+	"dongqiudi":  app.Dongqiudi,
+	"douban":     app.Douban,
+	"douyin":     app.Douyin,
+	"github":     app.Github,
+	"guojiadili": app.Guojiadili,
+	"historytoday": app.HistoryToday,
+	"hupu":       app.Hupu,
+	"ithome":     app.Ithome,
+	"lishipin":   app.Lishipin,
+	"pengpai":    app.Pengpai,
+	"qqnews":     app.Qqnews,
+	"shaoshupai": app.Shaoshupai,
+	"sougou":     app.Sougou,
+	"toutiao":    app.Toutiao,
+	"v2ex":       app.V2ex,
+	"wangyinews": app.WangyiNews,
+	"weibo":      app.WeiboHot,
+	"xinjingbao": app.Xinjingbao,
+	"zhihu":      app.Zhihu,
+	"quark":      app.Quark,
+	"kuake":      app.Quark,
+	"souhu":      app.Souhu,
+	"baidu":      app.Baidu,
+	"renmin":     app.Renminwang,
+	"nanfang":    app.Nanfangzhoumo,
+	"360doc":     app.Doc360,
+	"cctv":       app.CCTV,
+}
+
 // FetchDataFromAPI 根据来源获取API数据
 func (s *HotSearchService) FetchDataFromAPI(source string) (map[string]interface{}, error) {
-	// 将路由名称映射到实际API函数
-	switch source {
-	case "360search":
-		return app.Search360()
-	case "bilibili":
-		return app.Bilibili()
-	case "acfun":
-		return app.Acfun()
-	case "csdn":
-		return app.CSDN()
-	case "dongqiudi":
-		return app.Dongqiudi()
-	case "douban":
-		return app.Douban()
-	case "douyin":
-		return app.Douyin()
-	case "github":
-		return app.Github()
-	case "guojiadili":
-		return app.Guojiadili()
-	case "historytoday":
-		return app.HistoryToday()
-	case "hupu":
-		return app.Hupu()
-	case "ithome":
-		return app.Ithome()
-	case "lishipin":
-		return app.Lishipin()
-	case "pengpai":
-		return app.Pengpai()
-	case "qqnews":
-		return app.Qqnews()
-	case "shaoshupai":
-		return app.Shaoshupai()
-	case "sougou":
-		return app.Sougou()
-	case "toutiao":
-		return app.Toutiao()
-	case "v2ex":
-		return app.V2ex()
-	case "wangyinews":
-		return app.WangyiNews()
-	case "weibo":
-		return app.WeiboHot()
-	case "xinjingbao":
-		return app.Xinjingbao()
-	case "zhihu":
-		return app.Zhihu()
-	case "kuake", "quark":
-		return app.Quark()
-	case "souhu":
-		return app.Souhu()
-	case "baidu":
-		return app.Baidu()
-	case "renmin":
-		return app.Renminwang()
-	case "nanfang":
-		return app.Nanfangzhoumo()
-	case "360doc":
-		return app.Doc360()
-	case "cctv":
-		return app.CCTV()
-	default:
-		// 默认返回空结果
-		return map[string]interface{}{
-			"code":    200,
-			"message": source,
-			"obj":     []map[string]interface{}{},
-		}, nil
+	// 检查映射中是否存在对应的函数
+	if fn, exists := apiFunctionMap[source]; exists {
+		return fn()
 	}
+	
+	// 默认返回空结果
+	return map[string]interface{}{
+		"code":    200,
+		"message": source,
+		"obj":     []map[string]interface{}{},
+	}, nil
 }
 
 // convertSourceDataToHotSearchItems 将源数据转换为HotSearchItem

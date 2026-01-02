@@ -24,7 +24,7 @@ type PlatformInfo struct {
 func ListSources() (map[string]interface{}, error) {
 	// 获取所有平台信息
 	platforms := GetAllPlatformsInfo()
-	
+
 	// 将结构体数组转换为map数组，以确保与JSON序列化后的格式一致
 	platformsMap := make([]interface{}, len(platforms))
 	for i, platform := range platforms {

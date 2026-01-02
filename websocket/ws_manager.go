@@ -135,67 +135,8 @@ func (manager *WsManager) handleRequest(client *Client, source string) {
 	var data map[string]interface{}
 	var err error
 
+	// 检查特殊处理的源
 	switch source {
-	case "360search":
-		data, err = manager.hotSearchService.FetchDataFromAPI("360search")
-	case "bilibili":
-		data, err = manager.hotSearchService.FetchDataFromAPI("bilibili")
-	case "acfun":
-		data, err = manager.hotSearchService.FetchDataFromAPI("acfun")
-	case "csdn":
-		data, err = manager.hotSearchService.FetchDataFromAPI("csdn")
-	case "dongqiudi":
-		data, err = manager.hotSearchService.FetchDataFromAPI("dongqiudi")
-	case "douban":
-		data, err = manager.hotSearchService.FetchDataFromAPI("douban")
-	case "douyin":
-		data, err = manager.hotSearchService.FetchDataFromAPI("douyin")
-	case "github":
-		data, err = manager.hotSearchService.FetchDataFromAPI("github")
-	case "guojiadili":
-		data, err = manager.hotSearchService.FetchDataFromAPI("guojiadili")
-	case "historytoday":
-		data, err = manager.hotSearchService.FetchDataFromAPI("historytoday")
-	case "hupu":
-		data, err = manager.hotSearchService.FetchDataFromAPI("hupu")
-	case "ithome":
-		data, err = manager.hotSearchService.FetchDataFromAPI("ithome")
-	case "lishipin":
-		data, err = manager.hotSearchService.FetchDataFromAPI("lishipin")
-	case "pengpai":
-		data, err = manager.hotSearchService.FetchDataFromAPI("pengpai")
-	case "qqnews":
-		data, err = manager.hotSearchService.FetchDataFromAPI("qqnews")
-	case "shaoshupai":
-		data, err = manager.hotSearchService.FetchDataFromAPI("shaoshupai")
-	case "sougou":
-		data, err = manager.hotSearchService.FetchDataFromAPI("sougou")
-	case "souhu":
-		data, err = manager.hotSearchService.FetchDataFromAPI("souhu")
-	case "toutiao":
-		data, err = manager.hotSearchService.FetchDataFromAPI("toutiao")
-	case "v2ex":
-		data, err = manager.hotSearchService.FetchDataFromAPI("v2ex")
-	case "wangyinews":
-		data, err = manager.hotSearchService.FetchDataFromAPI("wangyinews")
-	case "weibo":
-		data, err = manager.hotSearchService.FetchDataFromAPI("weibo")
-	case "xinjingbao":
-		data, err = manager.hotSearchService.FetchDataFromAPI("xinjingbao")
-	case "zhihu":
-		data, err = manager.hotSearchService.FetchDataFromAPI("zhihu")
-	case "quark", "kuake":
-		data, err = manager.hotSearchService.FetchDataFromAPI("quark")
-	case "baidu":
-		data, err = manager.hotSearchService.FetchDataFromAPI("baidu")
-	case "renmin":
-		data, err = manager.hotSearchService.FetchDataFromAPI("renmin")
-	case "nanfang":
-		data, err = manager.hotSearchService.FetchDataFromAPI("nanfang")
-	case "360doc":
-		data, err = manager.hotSearchService.FetchDataFromAPI("360doc")
-	case "cctv":
-		data, err = manager.hotSearchService.FetchDataFromAPI("cctv")
 	case "all":
 		data, err = manager.hotSearchService.GetAllFromDBOrFetch()
 	case "list":
@@ -206,11 +147,55 @@ func (manager *WsManager) handleRequest(client *Client, source string) {
 			"obj":     routeNames,
 		}
 	default:
-		// 默认返回空结果
-		data = map[string]interface{}{
-			"code":    200,
-			"message": source,
-			"obj":     []map[string]interface{}{},
+		// 使用映射来处理常规API调用，减少嵌套条件
+		apiSourceMap := map[string]string{
+			"360search":  "360search",
+			"bilibili":   "bilibili",
+			"acfun":      "acfun",
+			"csdn":       "csdn",
+			"dongqiudi":  "dongqiudi",
+			"douban":     "douban",
+			"douyin":     "douyin",
+			"github":     "github",
+			"guojiadili": "guojiadili",
+			"historytoday": "historytoday",
+			"hupu":       "hupu",
+			"ithome":     "ithome",
+			"lishipin":   "lishipin",
+			"pengpai":    "pengpai",
+			"qqnews":     "qqnews",
+			"shaoshupai": "shaoshupai",
+			"sougou":     "sougou",
+			"souhu":      "souhu",
+			"toutiao":    "toutiao",
+			"v2ex":       "v2ex",
+			"wangyinews": "wangyinews",
+			"weibo":      "weibo",
+			"xinjingbao": "xinjingbao",
+			"zhihu":      "zhihu",
+			"quark":      "quark",
+			"kuake":      "quark", // kuake映射到quark
+			"baidu":      "baidu",
+			"renmin":     "renmin",
+			"nanfang":    "nanfang",
+			"360doc":     "360doc",
+			"cctv":       "cctv",
+		}
+
+		if apiSource, exists := apiSourceMap[source]; exists {
+			// 对于"kuake"，我们映射到"quark"，所以需要特殊处理
+			if source == "kuake" {
+				data, err = manager.hotSearchService.FetchDataFromAPI("quark")
+			} else {
+				data, err = manager.hotSearchService.FetchDataFromAPI(apiSource)
+			}
+		} else {
+			// 默认返回空结果
+			data = map[string]interface{}{
+				"code":    200,
+				"message": source,
+				"obj":     []map[string]interface{}{},
+			}
 		}
 	}
 

@@ -28,10 +28,10 @@ type Request struct {
 
 // Response 表示MCP响应
 type Response struct {
-	ID       string      `json:"id,omitempty"`
-	Result   interface{} `json:"result,omitempty"`
-	Error    *Error      `json:"error,omitempty"`
-	Version  string      `json:"jsonrpc"`
+	ID      string      `json:"id,omitempty"`
+	Result  interface{} `json:"result,omitempty"`
+	Error   *Error      `json:"error,omitempty"`
+	Version string      `json:"jsonrpc"`
 }
 
 // Error 表示MCP错误
@@ -79,10 +79,10 @@ func NewMCPHandler(service *service.HotSearchService, config *config.Config) *MC
 		config:  config,
 		tools:   make(map[string]Tool),
 	}
-	
+
 	// 注册可用的工具
 	handler.registerTools()
-	
+
 	return handler
 }
 
@@ -103,7 +103,7 @@ func (m *MCPHandler) registerTools() {
 			Required: []string{"platform"},
 		},
 	}
-	
+
 	// 注册获取所有平台热搜的工具
 	m.tools["get_all_hot_search"] = Tool{
 		Name:        "get_all_hot_search",
@@ -113,7 +113,7 @@ func (m *MCPHandler) registerTools() {
 			Properties: map[string]interface{}{},
 		},
 	}
-	
+
 	// 注册获取历史热搜数据的工具
 	m.tools["get_history_data"] = Tool{
 		Name:        "get_history_data",
@@ -340,75 +340,51 @@ func callAppFunction(funcName string) (interface{}, error) {
 	return results[0].Interface(), nil
 }
 
+// appFunctionMap 将函数名称映射到app包中的函数
+var appFunctionMap = map[string]interface{}{
+	"Baidu":         app.Baidu,
+	"Bilibili":      app.Bilibili,
+	"Zhihu":         app.Zhihu,
+	"WeiboHot":      app.WeiboHot,
+	"Search360":     app.Search360,
+	"Acfun":         app.Acfun,
+	"CSDN":          app.CSDN,
+	"Dongqiudi":     app.Dongqiudi,
+	"Douban":        app.Douban,
+	"Douyin":        app.Douyin,
+	"Github":        app.Github,
+	"GuoJiadili":    app.Guojiadili,
+	"Hupu":          app.Hupu,
+	"Ithome":        app.Ithome,
+	"Lishipin":      app.Lishipin,
+	"Pengpai":       app.Pengpai,
+	"Qqnews":        app.Qqnews,
+	"Sougou":        app.Sougou,
+	"Souhu":         app.Souhu,
+	"Toutiao":       app.Toutiao,
+	"V2ex":          app.V2ex,
+	"WangyiNews":    app.WangyiNews,
+	"Xinjingbao":    app.Xinjingbao,
+	"Renminwang":    app.Renminwang,
+	"Nanfangzhoumo": app.Nanfangzhoumo,
+	"Doc360":        app.Doc360,
+	"CCTV":          app.CCTV,
+	"Quark":         app.Quark,
+}
+
 // getAppFunctionByName 获取app包中指定名称的函数
 func getAppFunctionByName(name string) interface{} {
-	switch name {
-	case "Baidu":
-		return app.Baidu
-	case "Bilibili":
-		return app.Bilibili
-	case "Zhihu":
-		return app.Zhihu
-	case "WeiboHot":
-		return app.WeiboHot
-	case "Search360":
-		return app.Search360
-	case "Acfun":
-		return app.Acfun
-	case "CSDN":
-		return app.CSDN
-	case "Dongqiudi":
-		return app.Dongqiudi
-	case "Douban":
-		return app.Douban
-	case "Douyin":
-		return app.Douyin
-	case "Github":
-		return app.Github
-	case "GuoJiadili":
-		return app.Guojiadili // 注意：函数名是GuoJiadili，但变量名是guojiadili
-	case "Hupu":
-		return app.Hupu
-	case "Ithome":
-		return app.Ithome
-	case "Lishipin":
-		return app.Lishipin
-	case "Pengpai":
-		return app.Pengpai
-	case "Qqnews":
-		return app.Qqnews
-	case "Sougou":
-		return app.Sougou
-	case "Souhu":
-		return app.Souhu
-	case "Toutiao":
-		return app.Toutiao
-	case "V2ex":
-		return app.V2ex
-	case "WangyiNews":
-		return app.WangyiNews
-	case "Xinjingbao":
-		return app.Xinjingbao
-	case "Renminwang":
-		return app.Renminwang
-	case "Nanfangzhoumo":
-		return app.Nanfangzhoumo
-	case "Doc360":
-		return app.Doc360
-	case "CCTV":
-		return app.CCTV
-	case "Quark":
-		return app.Quark
-	default:
-		return nil
+	if fn, exists := appFunctionMap[name]; exists {
+		return fn
 	}
+	return nil
 }
 
 // executeGetHistoryData 执行获取历史数据的工具
 func (m *MCPHandler) executeGetHistoryData(id, platform, date, hour string) ([]byte, error) {
 	var result interface{}
 	var err error
-	
+
 	if hour != "" {
 		// 获取指定日期和小时的历史数据
 		result, err = m.service.GetHistoricalDataForWS(platform, date, hour)
@@ -416,7 +392,7 @@ func (m *MCPHandler) executeGetHistoryData(id, platform, date, hour string) ([]b
 		// 获取指定日期的所有小时数据
 		result, err = m.service.GetHistoricalDataByDateForWS(platform, date)
 	}
-	
+
 	if err != nil {
 		return m.createErrorResponse(id, -32603, "Error getting historical data: "+err.Error())
 	}
@@ -485,24 +461,24 @@ func (m *MCPHandler) createErrorResponse(id string, code int, message string) ([
 // RunMCPServerSTDIO 运行MCP服务器通过STDIO
 func (m *MCPHandler) RunMCPServerSTDIO() {
 	scanner := bufio.NewScanner(os.Stdin)
-	
+
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
 		if line == "" {
 			continue
 		}
-		
+
 		// 处理输入的JSON-RPC请求
 		response, err := m.HandleRequest([]byte(line))
 		if err != nil {
 			log.Printf("Error handling request: %v", err)
 			continue
 		}
-		
+
 		// 将响应输出到STDOUT
 		fmt.Println(string(response))
 	}
-	
+
 	if err := scanner.Err(); err != nil {
 		log.Printf("Error reading stdin: %v", err)
 	}

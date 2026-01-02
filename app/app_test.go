@@ -209,12 +209,12 @@ func TestListSources(t *testing.T) {
 				_, hasRouteName := platformMap["routeName"]
 				_, hasName := platformMap["name"]
 				_, hasIcon := platformMap["icon"]
-				
+
 				// 检查所有字段都存在
 				assert.True(t, hasRouteName, "平台信息应该包含路由名")
 				assert.True(t, hasName, "平台信息应该包含中文名")
 				assert.True(t, hasIcon, "平台信息应该包含图标")
-				
+
 				// 检查路由名是否为字符串
 				if routeNameStr, isString := platformMap["routeName"].(string); isString && routeNameStr == "baidu" {
 					foundBaidu = true

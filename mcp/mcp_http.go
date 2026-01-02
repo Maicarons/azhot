@@ -96,11 +96,11 @@ func SetupMCPRoutes(app *fiber.App, service *service.HotSearchService, cfg *conf
 	// MCP发现端点 - 提供MCP服务器元数据
 	mcpGroup.Get("/.well-known/mcp-info", func(c *fiber.Ctx) error {
 		info := map[string]interface{}{
-			"version": "1.0",
-			"name":    "azhot MCP Server",
+			"version":     "1.0",
+			"name":        "azhot MCP Server",
 			"description": "MCP server for azhot - Hot Search API Aggregation Service",
-			"tools": []string{"get_hot_search", "get_all_hot_search", "get_history_data"},
-			"prompts": []string{"analyze_hot_search_trends", "compare_platform_topics"},
+			"tools":       []string{"get_hot_search", "get_all_hot_search", "get_history_data"},
+			"prompts":     []string{"analyze_hot_search_trends", "compare_platform_topics"},
 		}
 		return c.JSON(info)
 	})
@@ -112,7 +112,7 @@ func SetupMCPRoutes(app *fiber.App, service *service.HotSearchService, cfg *conf
 			mcpHandler.RunMCPServerSTDIO()
 		}()
 	}
-	
+
 	// 如果配置中启用了MCP HTTP服务器，则启动它
 	if cfg.MCP != nil && cfg.MCP.HTTPEnabled {
 		go func() {

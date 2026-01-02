@@ -56,7 +56,7 @@ func SetupRoutes(app *fiber.App, hotSearchService *service.HotSearchService, cfg
 
 	// 设置API路由
 	setupAPIRoutes(app, hotSearchService)
-	
+
 	// 设置WebSocket路由
 	websocket.SetupWebSocketRoutes(app, hotSearchService, cfg)
 }
