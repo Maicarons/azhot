@@ -13,6 +13,17 @@
 
 </div>
 
+## 🌐 Traduções / Translations
+
+- [简体中文](README.md)
+- [English](README.en.md)
+- [Français](README.fr.md)
+- [한국어](README.ko.md)
+- [Español](README.es.md)
+- [Português](README.pt.md)
+
+---
+
 
 
 
