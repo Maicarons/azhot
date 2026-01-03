@@ -7,6 +7,11 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// CORSConfig CORS配置
+type CORSConfig struct {
+	AllowOrigins string // 允许的跨域请求来源
+}
+
 // Config 应用程序配置结构体
 type Config struct {
 	Server   ServerConfig
@@ -35,11 +40,6 @@ type MCPConfig struct {
 	Port         string // HTTP MCP服务器端口
 }
 
-// CORSConfig CORS配置
-type CORSConfig struct {
-	AllowOrigins string // 允许的来源，多个来源用逗号分隔
-}
-
 // LoadConfig 从环境变量或.env文件加载配置
 func LoadConfig() (*Config, error) {
 	// 加载 .env 文件（如果存在）
@@ -54,13 +54,13 @@ func LoadConfig() (*Config, error) {
 			Type: getEnvOrDefault("DB_TYPE", "sqlite"),
 			DSN:  getEnvOrDefault("MYSQL_DSN", "root:password@tcp(127.0.0.1:3306)/hot_search?charset=utf8mb4&parseTime=True&loc=Local"),
 		},
+		CORS: CORSConfig{
+			AllowOrigins: getEnvOrDefault("CORS_ALLOW_ORIGINS", ""),
+		},
 		MCP: &MCPConfig{
 			STDIOEnabled: getEnvOrDefault("MCP_STDIO_ENABLED", "false") == "true",
 			HTTPEnabled:  getEnvOrDefault("MCP_HTTP_ENABLED", "false") == "true",
 			Port:         getEnvOrDefault("MCP_PORT", "8081"),
-		},
-		CORS: CORSConfig{
-			AllowOrigins: getEnvOrDefault("CORS_ALLOW_ORIGINS", ""),
 		},
 		Debug: getEnvOrDefault("DEBUG", "false") == "true",
 	}
