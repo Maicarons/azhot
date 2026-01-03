@@ -169,6 +169,29 @@ docker build -t azhot .
 docker run -d -p 8080:8080 azhot
 ```
 
+### 环境变量配置
+
+项目使用 `.env` 文件进行配置，以下是可用的环境变量：
+
+#### 服务器配置
+- `SERVER_HOST`: 服务器主机地址，默认为 `localhost`
+- `SERVER_PORT`: 服务器端口，默认为 `8080`
+
+#### 数据库配置
+- `DB_TYPE`: 数据库类型，支持 `sqlite` 和 `mysql`，默认为 `sqlite`
+- `MYSQL_DSN`: MySQL 数据库连接字符串，当 `DB_TYPE` 为 `mysql` 时生效
+
+#### MCP 配置
+- `MCP_STDIO_ENABLED`: 是否启用 STDIO MCP 服务器，默认为 `false`
+- `MCP_HTTP_ENABLED`: 是否启用 HTTP MCP 服务器，默认为 `false`
+- `MCP_PORT`: HTTP MCP 服务器端口，默认为 `8081`
+
+#### 调试配置
+- `DEBUG`: 是否启用调试模式，默认为 `false`
+
+#### CORS 配置
+- `CORS_ALLOW_ORIGINS`: 允许的跨域请求来源，多个来源用逗号分隔，默认为空表示允许所有来源（仅在生产环境中推荐设置具体来源）
+
 ## API使用方法
 
 ### HTTP API
@@ -317,8 +340,6 @@ curl -X POST http://localhost:8080/mcp/tool/execute \
     "jsonrpc": "2.0"
   }'
 ```
-
-更多详细信息请参阅 [MCP服务器文档](mcp/README.md)。
 
 ## 开发贡献
 

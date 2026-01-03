@@ -32,12 +32,20 @@ func TestLoadConfig(t *testing.T) {
 		assert.Equal(t, "9090", config.Server.Port)
 		assert.Equal(t, "mysql", config.Database.Type)
 		assert.Equal(t, "test:test@tcp(localhost:3306)/testdb", config.Database.DSN)
+		assert.Equal(t, "", config.CORS.AllowOrigins) // 默认为空
+
+		// 设置CORS环境变量
+		os.Setenv("CORS_ALLOW_ORIGINS", "http://example.com,https://example.com")
+		configWithCORS, err := LoadConfig()
+		assert.NoError(t, err)
+		assert.Equal(t, "http://example.com,https://example.com", configWithCORS.CORS.AllowOrigins)
 
 		// 清理环境变量
 		os.Unsetenv("SERVER_HOST")
 		os.Unsetenv("SERVER_PORT")
 		os.Unsetenv("DB_TYPE")
 		os.Unsetenv("MYSQL_DSN")
+		os.Unsetenv("CORS_ALLOW_ORIGINS")
 	})
 }
 

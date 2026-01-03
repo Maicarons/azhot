@@ -23,11 +23,15 @@ import (
 // SetupRoutes 配置所有路由
 func SetupRoutes(app *fiber.App, hotSearchService *service.HotSearchService, cfg *config.Config) {
 	// 使用CORS中间件
-	app.Use(cors.New())
+
 	// 使用日志中间件
 	app.Use(logger.New())
 
 	if !cfg.Debug {
+		app.Use(cors.New(cors.Config{
+			AllowOrigins: cfg.CORS.AllowOrigins,
+		}))
+
 		app.Use(cache.New())
 
 		app.Use(etag.New())
