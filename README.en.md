@@ -152,6 +152,32 @@ docker build -t azhot .
 docker run -d -p 8080:8080 azhot
 ```
 
+### Environment Variables Configuration
+
+The project uses `.env` file for configuration. Here are the available environment variables:
+
+#### Server Configuration
+- `SERVER_HOST`: Server host address, default is `localhost`
+- `SERVER_PORT`: Server port, default is `8080`
+- `TLS_ENABLED`: Whether to enable TLS/HTTPS, default is `false`
+- `TLS_CERT_FILE`: TLS certificate file path, required when `TLS_ENABLED` is `true`
+- `TLS_KEY_FILE`: TLS private key file path, required when `TLS_ENABLED` is `true`
+
+#### Database Configuration
+- `DB_TYPE`: Database type, supports `sqlite` and `mysql`, default is `sqlite`
+- `MYSQL_DSN`: MySQL database connection string, effective when `DB_TYPE` is `mysql`
+
+#### MCP Configuration
+- `MCP_STDIO_ENABLED`: Whether to enable STDIO MCP server, default is `false`
+- `MCP_HTTP_ENABLED`: Whether to enable HTTP MCP server, default is `false`
+- `MCP_PORT`: HTTP MCP server port, default is `8081`
+
+#### Debug Configuration
+- `DEBUG`: Whether to enable debug mode, default is `false`
+
+#### CORS Configuration
+- `CORS_ALLOW_ORIGINS`: Allowed cross-origin request sources, multiple sources separated by commas, default is empty to allow all sources (recommended to set specific sources in production environment only)
+
 ## API Usage
 
 ### HTTP API

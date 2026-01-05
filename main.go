@@ -70,10 +70,15 @@ func main() {
 	// 动态更新Swagger文档中的Host
 	updateSwaggerHost(cfg)
 
-	// 启动服务器
-	serverAddress := cfg.GetServerAddress()
-	log.Info("Server starting on: ", serverAddress)
-	log.Fatal(appInstance.Listen(serverAddress))
+	// 根据配置启动服务器（HTTP或HTTPS）
+	if cfg.Server.TLSEnabled && cfg.Server.TLSCertFile != "" && cfg.Server.TLSKeyFile != "" {
+		log.Info("Starting HTTPS server on: ", cfg.GetServerAddress())
+		log.Fatal(appInstance.ListenTLS(cfg.GetServerAddress(), cfg.Server.TLSCertFile, cfg.Server.TLSKeyFile))
+	} else {
+		serverAddress := cfg.GetServerAddress()
+		log.Info("Starting HTTP server on: ", serverAddress)
+		log.Fatal(appInstance.Listen(serverAddress))
+	}
 }
 
 // updateSwaggerHost 更新Swagger文档中的Host

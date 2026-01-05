@@ -176,6 +176,9 @@ docker run -d -p 8080:8080 azhot
 #### 服务器配置
 - `SERVER_HOST`: 服务器主机地址，默认为 `localhost`
 - `SERVER_PORT`: 服务器端口，默认为 `8080`
+- `TLS_ENABLED`: 是否启用TLS/HTTPS，默认为 `false`
+- `TLS_CERT_FILE`: TLS证书文件路径，当 `TLS_ENABLED` 为 `true` 时必须提供
+- `TLS_KEY_FILE`: TLS私钥文件路径，当 `TLS_ENABLED` 为 `true` 时必须提供
 
 #### 数据库配置
 - `DB_TYPE`: 数据库类型，支持 `sqlite` 和 `mysql`，默认为 `sqlite`

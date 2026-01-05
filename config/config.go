@@ -23,8 +23,11 @@ type Config struct {
 
 // ServerConfig 服务器配置
 type ServerConfig struct {
-	Host string
-	Port string
+	Host        string
+	Port        string
+	TLSEnabled  bool   // 是否启用TLS/HTTPS
+	TLSCertFile string // TLS证书文件路径
+	TLSKeyFile  string // TLS私钥文件路径
 }
 
 // DatabaseConfig 数据库配置
@@ -47,8 +50,11 @@ func LoadConfig() (*Config, error) {
 
 	config := &Config{
 		Server: ServerConfig{
-			Host: getEnvOrDefault("SERVER_HOST", "localhost"),
-			Port: getEnvOrDefault("SERVER_PORT", "8080"),
+			Host:        getEnvOrDefault("SERVER_HOST", "localhost"),
+			Port:        getEnvOrDefault("SERVER_PORT", "8080"),
+			TLSEnabled:  getEnvOrDefault("TLS_ENABLED", "false") == "true",
+			TLSCertFile: getEnvOrDefault("TLS_CERT_FILE", ""),
+			TLSKeyFile:  getEnvOrDefault("TLS_KEY_FILE", ""),
 		},
 		Database: DatabaseConfig{
 			Type: getEnvOrDefault("DB_TYPE", "sqlite"),
