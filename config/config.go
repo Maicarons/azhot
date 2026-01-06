@@ -61,7 +61,7 @@ func LoadConfig() (*Config, error) {
 			DSN:  getEnvOrDefault("MYSQL_DSN", "root:password@tcp(127.0.0.1:3306)/hot_search?charset=utf8mb4&parseTime=True&loc=Local"),
 		},
 		CORS: CORSConfig{
-			AllowOrigins: getEnvOrDefault("CORS_ALLOW_ORIGINS", ""),
+			AllowOrigins: getEnvOrDefault("CORS_ALLOW_ORIGINS", "*"),
 		},
 		MCP: &MCPConfig{
 			STDIOEnabled: getEnvOrDefault("MCP_STDIO_ENABLED", "false") == "true",

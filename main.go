@@ -55,10 +55,9 @@ func main() {
 	// 创建Fiber应用实例
 	appInstance := fiber.New(fiber.Config{
 		// 设置应用名称
-		AppName:      "azhot",
-		ServerHeader: "",
-		JSONEncoder:  json.Marshal,
-		JSONDecoder:  json.Unmarshal,
+		AppName:     "azhot",
+		JSONEncoder: json.Marshal,
+		JSONDecoder: json.Unmarshal,
 	})
 
 	// 设置路由
