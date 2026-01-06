@@ -4,6 +4,7 @@ import (
 	"api/config"
 	"api/model"
 	"os"
+	"time"
 
 	"github.com/gofiber/fiber/v2/log"
 
@@ -30,27 +31,40 @@ func InitDBWithConfig(cfg *config.Config) {
 	if cfg.Database.Type == "mysql" {
 		InitMySQLWithConfig(cfg.Database.DSN)
 	} else {
-		InitSQLite()
+		InitSQLiteWithDSN(cfg.Database.DSN)
 	}
 }
 
 // InitSQLite 初始化SQLite数据库
 func InitSQLite() {
 
-	db, err := gorm.Open(sqlite.Open("hot_search.db"), &gorm.Config{})
+	DB = initSQLite("hot_search.db")
+
+	log.Info("SQLite database initialized successfully")
+}
+
+// InitSQLiteWithDSN 使用DSN初始化SQLite数据库
+func InitSQLiteWithDSN(dsn string) {
+
+	DB = initSQLite(dsn)
+
+	log.Info("SQLite database initialized successfully")
+}
+
+// initSQLite 初始化SQLite数据库的内部函数
+func initSQLite(dsn string) *gorm.DB {
+	db, err := gorm.Open(sqlite.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("failed to connect database: " + err.Error())
 	}
 
-	DB = db
-
 	// 自动迁移模式
-	err = DB.AutoMigrate(&model.HotSearchItem{}, &model.HotSearchData{})
+	err = db.AutoMigrate(&model.HotSearchItem{}, &model.HotSearchData{})
 	if err != nil {
 		panic("failed to migrate database: " + err.Error())
 	}
 
-	log.Info("SQLite database initialized successfully")
+	return db
 }
 
 // InitMySQL 初始化MySQL数据库（保持向后兼容）
@@ -104,16 +118,39 @@ func GetLatestData(source string) ([]model.HotSearchItem, error) {
 
 // GetAllLatestData 获取所有最新数据
 func GetAllLatestData() (map[string][]model.HotSearchItem, error) {
-	var items []model.HotSearchItem
-	result := DB.Order("source, item_index ASC").Find(&items)
+	// 为每个来源获取最新的数据批次
+	data := make(map[string][]model.HotSearchItem)
+
+	// 获取所有不同的来源
+	var sources []string
+	result := DB.Model(&model.HotSearchItem{}).Distinct("source").Pluck("source", &sources)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
-	// 按来源分组
-	data := make(map[string][]model.HotSearchItem)
-	for _, item := range items {
-		data[item.Source] = append(data[item.Source], item)
+	// 对于每个来源，获取最新创建时间的数据
+	for _, source := range sources {
+		var latestCreatedAt time.Time
+		// 获取此来源的最新创建时间
+		result = DB.Model(&model.HotSearchItem{}).
+			Where("source = ?", source).
+			Order("created_at DESC").
+			Limit(1).
+			Pluck("created_at", &latestCreatedAt)
+		if result.Error != nil {
+			return nil, result.Error
+		}
+
+		// 获取此来源在最新时间的所有数据
+		var items []model.HotSearchItem
+		result = DB.Where("source = ? AND created_at = ?", source, latestCreatedAt).
+			Order("item_index ASC").
+			Find(&items)
+		if result.Error != nil {
+			return nil, result.Error
+		}
+
+		data[source] = items
 	}
 
 	return data, nil
@@ -121,6 +158,11 @@ func GetAllLatestData() (map[string][]model.HotSearchItem, error) {
 
 // SaveData 保存数据到数据库
 func SaveData(source string, items []model.HotSearchItem) error {
+	// 删除旧数据
+	if err := DB.Where("source = ?", source).Delete(&model.HotSearchItem{}).Error; err != nil {
+		return err
+	}
+
 	// 保存新数据
 	for i := range items {
 		items[i].Source = source
@@ -141,6 +183,12 @@ func SaveAllData(allData map[string][]model.HotSearchItem) error {
 
 	// 逐个保存每个来源的数据
 	for source, items := range allData {
+		// 删除旧数据
+		if err := tx.Where("source = ?", source).Delete(&model.HotSearchItem{}).Error; err != nil {
+			tx.Rollback()
+			return err
+		}
+
 		for i := range items {
 			items[i].Source = source
 		}

@@ -11,7 +11,7 @@ import (
 
 func TestInitDBWithConfig(t *testing.T) {
 	// 创建临时SQLite数据库文件
-	tempDB := "test_hot_search.db"
+	tempDB := "test_hot_search_1.db"
 	defer os.Remove(tempDB) // 测试结束后清理
 
 	cfg := &config.Config{
@@ -30,7 +30,7 @@ func TestInitDBWithConfig(t *testing.T) {
 
 func TestSaveAndGetData(t *testing.T) {
 	// 创建临时SQLite数据库文件
-	tempDB := "test_hot_search.db"
+	tempDB := "test_hot_search_2.db"
 	defer os.Remove(tempDB) // 测试结束后清理
 
 	cfg := &config.Config{
@@ -67,7 +67,7 @@ func TestSaveAndGetData(t *testing.T) {
 
 func TestSaveAndgetAllData(t *testing.T) {
 	// 创建临时SQLite数据库文件
-	tempDB := "test_hot_search.db"
+	tempDB := "test_hot_search_3.db"
 	defer os.Remove(tempDB) // 测试结束后清理
 
 	cfg := &config.Config{
@@ -106,7 +106,7 @@ func TestSaveAndgetAllData(t *testing.T) {
 
 func TestGetLatestDataNotFound(t *testing.T) {
 	// 创建临时SQLite数据库文件
-	tempDB := "test_hot_search.db"
+	tempDB := "test_hot_search_4.db"
 	defer os.Remove(tempDB) // 测试结束后清理
 
 	cfg := &config.Config{
@@ -126,7 +126,7 @@ func TestGetLatestDataNotFound(t *testing.T) {
 
 func TestSaveDataOverwrites(t *testing.T) {
 	// 创建临时SQLite数据库文件
-	tempDB := "test_hot_search.db"
+	tempDB := "test_hot_search_5.db"
 	defer os.Remove(tempDB) // 测试结束后清理
 
 	cfg := &config.Config{

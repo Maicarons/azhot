@@ -32,7 +32,7 @@ func TestLoadConfig(t *testing.T) {
 		assert.Equal(t, "9090", config.Server.Port)
 		assert.Equal(t, "mysql", config.Database.Type)
 		assert.Equal(t, "test:test@tcp(localhost:3306)/testdb", config.Database.DSN)
-		assert.Equal(t, "", config.CORS.AllowOrigins) // 默认为空
+		assert.Equal(t, "*", config.CORS.AllowOrigins) // 默认为*
 
 		// 设置CORS环境变量
 		os.Setenv("CORS_ALLOW_ORIGINS", "http://example.com,https://example.com")

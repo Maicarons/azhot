@@ -1,6 +1,7 @@
 package service
 
 import (
+	"api/config"
 	"api/db"
 	"api/model"
 	"os"
@@ -11,11 +12,17 @@ import (
 
 func TestGetFromDBOrFetch(t *testing.T) {
 	// 创建临时SQLite数据库文件
-	tempDB := "test_hot_search.db"
+	tempDB := "test_service_hot_search_1.db"
 	defer os.Remove(tempDB) // 测试结束后清理
 
 	// 初始化数据库
-	db.InitSQLite()
+	cfg := &config.Config{
+		Database: config.DatabaseConfig{
+			Type: "sqlite",
+			DSN:  tempDB,
+		},
+	}
+	db.InitDBWithConfig(cfg)
 
 	service := &HotSearchService{}
 
@@ -53,8 +60,18 @@ func TestGetFromDBOrFetch(t *testing.T) {
 }
 
 func TestGetAllFromDBOrFetch(t *testing.T) {
+	// 创建临时SQLite数据库文件
+	tempDB := "test_service_hot_search_3.db" // 使用不同的文件名
+	defer os.Remove(tempDB)                  // 测试结束后清理
+
 	// 初始化数据库
-	db.InitSQLite()
+	cfg := &config.Config{
+		Database: config.DatabaseConfig{
+			Type: "sqlite",
+			DSN:  tempDB,
+		},
+	}
+	db.InitDBWithConfig(cfg)
 
 	service := &HotSearchService{}
 
