@@ -43,6 +43,7 @@ jobs:
         cd build
         cmake ..
         cmake --build . --target test-all
+        cd ..
 
     - name: Build with CMake for all platforms
       run: |
