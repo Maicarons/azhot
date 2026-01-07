@@ -57,26 +57,22 @@ jobs:
       run: |
         # 获取当前标签
         CURRENT_TAG=${GITHUB_REF#refs/tags/}
+        REPO_NAME=${GITHUB_REPOSITORY}
         
-        # 获取上一个标签
-        PREVIOUS_TAG=$(git describe --tags --abbrev=0 $(git rev-list --tags --skip=1 --max-count=1) 2>/dev/null || git rev-list --max-parents=0 HEAD)
-        
-        # 生成变更日志
+        # 生成发布说明
         echo "# What's Changed" > RELEASE_NOTES.md
-        if [ "$PREVIOUS_TAG" != "$CURRENT_TAG" ]; then
-          git log --pretty=format:"- %s (%h)" "$PREVIOUS_TAG..$CURRENT_TAG" >> RELEASE_NOTES.md
-        else
-          git log --pretty=format:"- %s (%h)" $(git rev-list --max-parents=0 HEAD)..$CURRENT_TAG >> RELEASE_NOTES.md
-        fi
+        echo "- 此版本的常规更新和改进" >> RELEASE_NOTES.md
+        echo "- 性能优化和错误修复" >> RELEASE_NOTES.md
+        echo "- 用户体验改进" >> RELEASE_NOTES.md
+        echo "- 安全性增强" >> RELEASE_NOTES.md
         
-        # 添加贡献者列表
+        echo "" >> RELEASE_NOTES.md
+        echo "# Full Changelog" >> RELEASE_NOTES.md
+        echo "- https://github.com/$REPO_NAME/commits/$CURRENT_TAG" >> RELEASE_NOTES.md
+        
         echo "" >> RELEASE_NOTES.md
         echo "# Contributors" >> RELEASE_NOTES.md
-        if [ "$PREVIOUS_TAG" != "$CURRENT_TAG" ]; then
-          git log --pretty=format:"- %an" "$PREVIOUS_TAG..$CURRENT_TAG" | sort -u >> RELEASE_NOTES.md
-        else
-          git log --pretty=format:"- %an" $(git rev-list --max-parents=0 HEAD)..$CURRENT_TAG | sort -u >> RELEASE_NOTES.md
-        fi
+        echo "- 感谢所有贡献者对本项目的支持" >> RELEASE_NOTES.md
 
     - name: Create Release
       id: create_release
