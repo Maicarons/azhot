@@ -48,6 +48,15 @@ func LoadConfig() (*Config, error) {
 	// 加载 .env 文件（如果存在）
 	godotenv.Load()
 
+	// 根据数据库类型设置默认DSN
+	dbType := getEnvOrDefault("DB_TYPE", "sqlite")
+	var defaultDSN string
+	if dbType == "sqlite" {
+		defaultDSN = getEnvOrDefault("SQLITE_DSN", "hot_search.db")
+	} else {
+		defaultDSN = getEnvOrDefault("MYSQL_DSN", "root:password@tcp(127.0.0.1:3306)/hot_search?charset=utf8mb4&parseTime=True&loc=Local")
+	}
+
 	config := &Config{
 		Server: ServerConfig{
 			Host:        getEnvOrDefault("SERVER_HOST", "localhost"),
@@ -57,8 +66,8 @@ func LoadConfig() (*Config, error) {
 			TLSKeyFile:  getEnvOrDefault("TLS_KEY_FILE", ""),
 		},
 		Database: DatabaseConfig{
-			Type: getEnvOrDefault("DB_TYPE", "sqlite"),
-			DSN:  getEnvOrDefault("MYSQL_DSN", "root:password@tcp(127.0.0.1:3306)/hot_search?charset=utf8mb4&parseTime=True&loc=Local"),
+			Type: dbType,
+			DSN:  defaultDSN,
 		},
 		CORS: CORSConfig{
 			AllowOrigins: getEnvOrDefault("CORS_ALLOW_ORIGINS", "*"),
