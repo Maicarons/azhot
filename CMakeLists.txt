@@ -40,14 +40,14 @@ function(build_for_platform OS ARCH OUTPUT_NAME)
     if(WIN32)
         add_custom_target(build_${OS}_${ARCH}
             COMMAND ${CMAKE_COMMAND} -E make_directory ${BUILD_DIR}
-            COMMAND cmd /c "set \"GOOS=${OS}\" && set \"GOARCH=${ARCH}\" && set \"CGO_ENABLED=0\" && go build -o \"${BUILD_DIR}/${OUTPUT_NAME}\" ."
+            COMMAND cmd /c "set \"GOOS=${OS}\" && set \"GOARCH=${ARCH}\" && set \"CGO_ENABLED=1\" && go build -o \"${BUILD_DIR}/${OUTPUT_NAME}\" ."
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
             COMMENT "Building for ${OS}/${ARCH}..."
         )
     else()
         add_custom_target(build_${OS}_${ARCH}
             COMMAND ${CMAKE_COMMAND} -E make_directory ${BUILD_DIR}
-            COMMAND env GOOS=${OS} GOARCH=${ARCH} CGO_ENABLED=0 go build -o ${BUILD_DIR}/${OUTPUT_NAME} .
+            COMMAND env GOOS=${OS} GOARCH=${ARCH} CGO_ENABLED=1 go build -o ${BUILD_DIR}/${OUTPUT_NAME} .
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
             COMMENT "Building for ${OS}/${ARCH}..."
         )

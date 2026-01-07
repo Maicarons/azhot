@@ -15,7 +15,7 @@ func TestLoadConfig(t *testing.T) {
 		assert.Equal(t, "localhost", config.Server.Host)
 		assert.Equal(t, "8080", config.Server.Port)
 		assert.Equal(t, "sqlite", config.Database.Type)
-		assert.Equal(t, "root:password@tcp(127.0.0.1:3306)/hot_search?charset=utf8mb4&parseTime=True&loc=Local", config.Database.DSN)
+		assert.Equal(t, "hot_search.db", config.Database.DSN)
 	})
 
 	// 测试环境变量配置

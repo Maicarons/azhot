@@ -37,7 +37,7 @@ func Bilibili() (map[string]interface{}, error) {
 		Timeout: 10 * time.Second,
 	}
 
-	url := "https://api.bilibili.com/x/web-interface/ranking/v2?rid=0&type=all"
+	url := "https://api.bilibili.com/x/web-interface/ranking"
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
