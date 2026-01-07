@@ -55,11 +55,27 @@ jobs:
 
     - name: Generate release notes
       run: |
-        # Generate changelog from git commits
-        git log --oneline $(git describe --tags --abbrev=0 $(git describe --tags --abbrev=0)^) $(git describe --tags --abbrev=0) > RELEASE_NOTES.md
+        # 获取当前和上一个标签
+        CURRENT_TAG=$(git describe --tags --abbrev=0)
+        PREVIOUS_TAG=$(git describe --tags --abbrev=0 $(git rev-list --tags --skip=1 --max-count=1))
+        
+        if [ -z "$PREVIOUS_TAG" ]; then
+          # 如果没有上一个标签，则使用初始提交
+          PREVIOUS_TAG=$(git rev-list --max-parents=0 HEAD)
+        fi
+        
+        # 生成变更日志
+        echo "# What's Changed" > RELEASE_NOTES.md
+        if [ "$PREVIOUS_TAG" != "$CURRENT_TAG" ]; then
+          git log --pretty=format:"- %s (%h)" "$PREVIOUS_TAG..$CURRENT_TAG" >> RELEASE_NOTES.md
+        else
+          git log --pretty=format:"- %s (%h)" "$CURRENT_TAG" >> RELEASE_NOTES.md
+        fi
+        
+        # 添加贡献者列表
         echo "" >> RELEASE_NOTES.md
-        echo "# What's Changed" >> RELEASE_NOTES.md
-        git log --pretty=format:"- %s (%h)" $(git describe --tags --abbrev=0 $(git describe --tags --abbrev=0)^)..$(git.describe --tags --abbrev=0) >> RELEASE_NOTES.md
+        echo "# Contributors" >> RELEASE_NOTES.md
+        git log --pretty=format:"- %an" "$PREVIOUS_TAG..$CURRENT_TAG" | sort -u >> RELEASE_NOTES.md
 
     - name: Create Release
       id: create_release
