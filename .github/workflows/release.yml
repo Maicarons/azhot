@@ -37,7 +37,7 @@ jobs:
   build-and-package:
     name: Build and Package for ${{ matrix.target }}
     runs-on: ${{ matrix.os }}
-    needs: [test, create-release]  # 添加对 create-release 的依赖
+    needs: test
     strategy:
       matrix:
         include:
@@ -133,37 +133,36 @@ jobs:
         # 验证包文件
         ls -la ${{ matrix.asset_name }}
         file ${{ matrix.asset_name }} || echo "File type check skipped"
+        
+        # 保存构建产物
+        mkdir -p ./artifacts
+        cp ${{ matrix.asset_name }} ./artifacts/
       shell: bash
       env:
         GOOS: ${{ matrix.goos }}
         GOARCH: ${{ matrix.goarch }}
         CGO_ENABLED: 0
 
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
       with:
-        upload_url: ${{ needs.create-release.outputs.upload_url }}
-        asset_path: ./${{ matrix.asset_name }}
-        asset_name: ${{ matrix.asset_name }}
-        asset_content_type: application/zip
-    if: ${{ !cancelled() }}
+        name: ${{ matrix.asset_name }}
+        path: ./artifacts/${{ matrix.asset_name }}
 
   create-release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
-    needs: test
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    needs: build-and-package
     steps:
     - name: Checkout code
       uses: actions/checkout@v6
       with:
         fetch-depth: 0
 
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+
     - name: Generate Release Notes
-      id: release_notes
       run: |
         # 获取当前标签
         TAG=${GITHUB_REF#refs/tags/}
@@ -192,13 +191,15 @@ jobs:
         echo "# Contributors" >> RELEASE_NOTES.md
         echo "- 感谢所有贡献者对本项目的支持" >> RELEASE_NOTES.md
 
-    - name: Create Release
-      id: create_release
-      uses: ncipollo/release-action@v1
+    - name: Create Release and Upload Assets
+      uses: softprops/action-gh-release@v2
       with:
-        tag: ${{ github.ref_name }}
+        tag_name: ${{ github.ref_name }}
         name: Release ${{ github.ref_name }}
-        bodyFile: "RELEASE_NOTES.md"
+        body_path: RELEASE_NOTES.md
         draft: false
         prerelease: false
-        token: ${{ secrets.GITHUB_TOKEN }}
+        files: |
+          **/*.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
