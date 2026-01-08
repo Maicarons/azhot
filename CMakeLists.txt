@@ -5,6 +5,7 @@ project(azhot)
 set(BINARY_NAME azhot)
 set(BUILD_DIR build)
 set(DIST_DIR dist)
+set(PACKAGE_DIR package)
 
 # 检测操作系统
 if(WIN32)
@@ -49,7 +50,7 @@ function(build_for_platform OS ARCH OUTPUT_NAME)
         else()
             add_custom_target(build_${OS}_${ARCH}
                 COMMAND ${CMAKE_COMMAND} -E make_directory ${BUILD_DIR}
-                COMMAND cmd /c "set \"GOOS=${OS}\" && set \"GOARCH=${ARCH}\" && set \"CGO_ENABLED=1\" && go build -o \"${BUILD_DIR}/${OUTPUT_NAME}\" ."
+                COMMAND cmd /c "set \"GOOS=${OS}\" && set \"GOARCH=${ARCH}\" && set \"CGO_ENABLED=0\" && go build -o \"${BUILD_DIR}/${OUTPUT_NAME}\" ."
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                 COMMENT "Building for ${OS}/${ARCH}..."
             )
@@ -66,7 +67,7 @@ function(build_for_platform OS ARCH OUTPUT_NAME)
         else()
             add_custom_target(build_${OS}_${ARCH}
                 COMMAND ${CMAKE_COMMAND} -E make_directory ${BUILD_DIR}
-                COMMAND env GOOS=${OS} GOARCH=${ARCH} CGO_ENABLED=1 go build -o ${BUILD_DIR}/${OUTPUT_NAME} .
+                COMMAND env GOOS=${OS} GOARCH=${ARCH} CGO_ENABLED=0 go build -o ${BUILD_DIR}/${OUTPUT_NAME} .
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                 COMMENT "Building for ${OS}/${ARCH}..."
             )
@@ -75,40 +76,43 @@ function(build_for_platform OS ARCH OUTPUT_NAME)
 endfunction()
 
 # 预定义平台构建
-build_for_platform(linux amd64 ${BINARY_NAME}_linux)
-build_for_platform(windows amd64 ${BINARY_NAME}_windows.exe)
-build_for_platform(darwin amd64 ${BINARY_NAME}_darwin)
+build_for_platform(linux amd64 ${BINARY_NAME}_linux_amd64)
+build_for_platform(windows amd64 ${BINARY_NAME}_windows_amd64.exe)
+build_for_platform(darwin amd64 ${BINARY_NAME}_darwin_amd64)
 
 # 添加自定义目标：打包
 add_custom_target(package
     # 先构建所有平台
     DEPENDS build_linux_amd64 build_windows_amd64 build_darwin_amd64
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${DIST_DIR}/linux-amd64
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${DIST_DIR}/windows-amd64
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${DIST_DIR}/darwin-amd64
-    COMMAND ${CMAKE_COMMAND} -E copy ${BUILD_DIR}/${BINARY_NAME}_linux ${DIST_DIR}/linux-amd64/${BINARY_NAME}
-    COMMAND ${CMAKE_COMMAND} -E copy ${BUILD_DIR}/${BINARY_NAME}_windows.exe ${DIST_DIR}/windows-amd64/${BINARY_NAME}.exe
-    COMMAND ${CMAKE_COMMAND} -E copy ${BUILD_DIR}/${BINARY_NAME}_darwin ${DIST_DIR}/darwin-amd64/${BINARY_NAME}
-    COMMAND ${CMAKE_COMMAND} -E copy .env.example ${DIST_DIR}/linux-amd64/.env
-    COMMAND ${CMAKE_COMMAND} -E copy .env.example ${DIST_DIR}/windows-amd64/.env
-    COMMAND ${CMAKE_COMMAND} -E copy .env.example ${DIST_DIR}/darwin-amd64/.env
-    COMMAND ${CMAKE_COMMAND} -E copy README.md ${DIST_DIR}/linux-amd64/
-    COMMAND ${CMAKE_COMMAND} -E copy README.md ${DIST_DIR}/windows-amd64/
-    COMMAND ${CMAKE_COMMAND} -E copy README.md ${DIST_DIR}/darwin-amd64/
-    COMMAND ${CMAKE_COMMAND} -E copy LICENSE ${DIST_DIR}/linux-amd64/
-    COMMAND ${CMAKE_COMMAND} -E copy LICENSE ${DIST_DIR}/windows-amd64/
-    COMMAND ${CMAKE_COMMAND} -E copy LICENSE ${DIST_DIR}/darwin-amd64/
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${PACKAGE_DIR}
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${PACKAGE_DIR}/linux-amd64
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${PACKAGE_DIR}/windows-amd64
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${PACKAGE_DIR}/darwin-amd64
+    COMMAND ${CMAKE_COMMAND} -E copy ${BUILD_DIR}/${BINARY_NAME}_linux_amd64 ${PACKAGE_DIR}/linux-amd64/${BINARY_NAME}
+    COMMAND ${CMAKE_COMMAND} -E copy ${BUILD_DIR}/${BINARY_NAME}_windows_amd64.exe ${PACKAGE_DIR}/windows-amd64/${BINARY_NAME}.exe
+    COMMAND ${CMAKE_COMMAND} -E copy ${BUILD_DIR}/${BINARY_NAME}_darwin_amd64 ${PACKAGE_DIR}/darwin-amd64/${BINARY_NAME}
+    COMMAND ${CMAKE_COMMAND} -E copy .env.example ${PACKAGE_DIR}/linux-amd64/.env
+    COMMAND ${CMAKE_COMMAND} -E copy .env.example ${PACKAGE_DIR}/windows-amd64/.env
+    COMMAND ${CMAKE_COMMAND} -E copy .env.example ${PACKAGE_DIR}/darwin-amd64/.env
+    COMMAND ${CMAKE_COMMAND} -E copy README.md ${PACKAGE_DIR}/linux-amd64/
+    COMMAND ${CMAKE_COMMAND} -E copy README.md ${PACKAGE_DIR}/windows-amd64/
+    COMMAND ${CMAKE_COMMAND} -E copy README.md ${PACKAGE_DIR}/darwin-amd64/
+    COMMAND ${CMAKE_COMMAND} -E copy LICENSE ${PACKAGE_DIR}/linux-amd64/
+    COMMAND ${CMAKE_COMMAND} -E copy LICENSE ${PACKAGE_DIR}/windows-amd64/
+    COMMAND ${CMAKE_COMMAND} -E copy LICENSE ${PACKAGE_DIR}/darwin-amd64/
     # 创建zip压缩包
-    COMMAND ${CMAKE_COMMAND} -E chdir ${DIST_DIR}/linux-amd64/ ${CMAKE_COMMAND} -E tar "cf" "../azhot_linux_amd64.zip" "--format=zip" "."
-    COMMAND ${CMAKE_COMMAND} -E chdir ${DIST_DIR}/windows-amd64/ ${CMAKE_COMMAND} -E tar "cf" "../azhot_windows_amd64.zip" "--format=zip" "."
-    COMMAND ${CMAKE_COMMAND} -E chdir ${DIST_DIR}/darwin-amd64/ ${CMAKE_COMMAND} -E tar "cf" "../azhot_darwin_amd64.zip" "--format=zip" "."
+    COMMAND ${CMAKE_COMMAND} -E chdir ${PACKAGE_DIR}/linux-amd64/ ${CMAKE_COMMAND} -E tar "cf" "../azhot_linux_amd64.zip" "--format=zip" "."
+    COMMAND ${CMAKE_COMMAND} -E chdir ${PACKAGE_DIR}/windows-amd64/ ${CMAKE_COMMAND} -E tar "cf" "../azhot_windows_amd64.zip" "--format=zip" "."
+    COMMAND ${CMAKE_COMMAND} -E chdir ${PACKAGE_DIR}/darwin-amd64/ ${CMAKE_COMMAND} -E tar "cf" "../azhot_darwin_amd64.zip" "--format=zip" "."
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     COMMENT "Packaging for all platforms..."
 )
 
 # 添加自定义目标：清理构建产物
 add_custom_target(azhot_clean
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${BUILD_DIR}
     COMMAND ${CMAKE_COMMAND} -E remove_directory ${DIST_DIR}
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${PACKAGE_DIR}
     COMMAND go clean -cache
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     COMMENT "Cleaning build artifacts..."
@@ -200,21 +204,21 @@ add_custom_target(build-platform
 if(WIN32)
     add_custom_target(build-platform-linux
         COMMAND ${CMAKE_COMMAND} -E make_directory ${BUILD_DIR}
-        COMMAND cmd /c "set \"GOOS=linux\" && set \"GOARCH=amd64\" && set \"CGO_ENABLED=0\" && go build -o \"${BUILD_DIR}/${BINARY_NAME}_linux\" ."
+        COMMAND cmd /c "set \"GOOS=linux\" && set \"GOARCH=amd64\" && set \"CGO_ENABLED=0\" && go build -o \"${BUILD_DIR}/${BINARY_NAME}_linux_amd64\" ."
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT "Building for Linux amd64..."
     )
 
     add_custom_target(build-platform-windows
         COMMAND ${CMAKE_COMMAND} -E make_directory ${BUILD_DIR}
-        COMMAND cmd /c "set \"GOOS=windows\" && set \"GOARCH=amd64\" && set \"CGO_ENABLED=0\" && go build -o \"${BUILD_DIR}/${BINARY_NAME}_windows.exe\" ."
+        COMMAND cmd /c "set \"GOOS=windows\" && set \"GOARCH=amd64\" && set \"CGO_ENABLED=0\" && go build -o \"${BUILD_DIR}/${BINARY_NAME}_windows_amd64.exe\" ."
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT "Building for Windows amd64..."
     )
 
     add_custom_target(build-platform-darwin
         COMMAND ${CMAKE_COMMAND} -E make_directory ${BUILD_DIR}
-        COMMAND cmd /c "set \"GOOS=darwin\" && set \"GOARCH=amd64\" && set \"CGO_ENABLED=0\" && go build -o \"${BUILD_DIR}/${BINARY_NAME}_darwin\" ."
+        COMMAND cmd /c "set \"GOOS=darwin\" && set \"GOARCH=amd64\" && set \"CGO_ENABLED=0\" && go build -o \"${BUILD_DIR}/${BINARY_NAME}_darwin_amd64\" ."
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT "Building for Darwin (macOS) amd64..."
     )
@@ -235,21 +239,21 @@ if(WIN32)
 else()
     add_custom_target(build-platform-linux
         COMMAND ${CMAKE_COMMAND} -E make_directory ${BUILD_DIR}
-        COMMAND env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ${BUILD_DIR}/${BINARY_NAME}_linux .
+        COMMAND env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ${BUILD_DIR}/${BINARY_NAME}_linux_amd64 .
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT "Building for Linux amd64..."
     )
 
     add_custom_target(build-platform-windows
         COMMAND ${CMAKE_COMMAND} -E make_directory ${BUILD_DIR}
-        COMMAND env GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -o ${BUILD_DIR}/${BINARY_NAME}_windows.exe .
+        COMMAND env GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -o ${BUILD_DIR}/${BINARY_NAME}_windows_amd64.exe .
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT "Building for Windows amd64..."
     )
 
     add_custom_target(build-platform-darwin
         COMMAND ${CMAKE_COMMAND} -E make_directory ${BUILD_DIR}
-        COMMAND env GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -o ${BUILD_DIR}/${BINARY_NAME}_darwin .
+        COMMAND env GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -o ${BUILD_DIR}/${BINARY_NAME}_darwin_amd64 .
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT "Building for Darwin (macOS) amd64..."
     )
@@ -268,3 +272,16 @@ else()
         COMMENT "Building for Windows arm64..."
     )
 endif()
+
+# 添加自定义目标：构建并打包用于发布的版本
+add_custom_target(release
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${PACKAGE_DIR}
+    DEPENDS package
+    COMMENT "Building and packaging release versions..."
+)
+
+# 添加自定义目标：构建多架构版本
+add_custom_target(build-multiarch
+    DEPENDS build_linux_amd64 build_windows_amd64 build_darwin_amd64 build_platform_linux_arm64 build_platform_windows_arm64
+    COMMENT "Building for multiple architectures..."
+)

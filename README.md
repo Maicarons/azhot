@@ -363,7 +363,7 @@ dev.sh # 使用Air作为热重启调试工具
 
 ## CMake构建系统
 
-项目现在支持使用CMake进行构建，支持Windows和Linux平台。
+项目现在支持使用CMake进行构建，支持Windows、Linux和macOS平台，并且支持CI/CD集成。
 
 ### 构建命令
 
@@ -400,6 +400,12 @@ build_platform.bat darwin
 # 打包（为所有支持的平台创建zip包）
 cmake --build . --target package
 
+# 构建并打包用于发布的版本（包含所有平台的zip包）
+cmake --build . --target release
+
+# 构建多架构版本
+cmake --build . --target build-multiarch
+
 # 清理构建产物
 cmake --build . --target azhot_clean
 
@@ -421,6 +427,30 @@ cmake --build . --target staticcheck
 # 构建CI版本（不生成swagger文档）
 cmake --build . --target build-ci
 ```
+
+### CI/CD集成
+
+项目包含一个自动化的发布流程，支持在GitHub上自动创建发布版本并打包适用于不同平台的zip文件。该流程支持Windows、Linux和macOS三个平台，并为每个平台创建相应的zip压缩包，包含二进制文件和必要的配置文件。
+
+主要特性：
+- 自动构建三个平台的二进制文件（Linux amd64, Windows amd64, macOS amd64）
+- 为每个平台创建zip包，包含二进制文件、配置文件、README和LICENSE
+- 自动发布到GitHub Releases
+- 支持本地和CI环境运行
+
+### 使用独立脚本构建
+
+项目还提供了独立的构建脚本，可以在任何环境下使用：
+
+```bash
+# Linux/macOS
+./scripts/build-release.sh [输出目录]
+
+# Windows
+./scripts\build-release.bat [输出目录]
+```
+
+这些脚本会构建所有平台的二进制文件并创建zip包。
 
 ## 许可证
 

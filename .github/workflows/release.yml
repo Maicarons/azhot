@@ -1,0 +1,203 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+
+    - name: Set up Go
+      uses: actions/setup-go@v6
+      with:
+        go-version: '1.24.x'
+        cache: true
+
+    - name: Install CMake
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake
+
+    - name: Run tests
+      run: |
+        go test -v ./...
+
+  build-and-package:
+    name: Build and Package for ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: linux-amd64
+            goos: linux
+            goarch: amd64
+            binary_name: azhot
+            asset_name: azhot_linux_amd64.zip
+          - os: windows-latest
+            target: windows-amd64
+            goos: windows
+            goarch: amd64
+            binary_name: azhot.exe
+            asset_name: azhot_windows_amd64.zip
+          - os: macos-latest
+            target: darwin-amd64
+            goos: darwin
+            goarch: amd64
+            binary_name: azhot
+            asset_name: azhot_darwin_amd64.zip
+          
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+
+    - name: Set up Go
+      uses: actions/setup-go@v6
+      with:
+        go-version: '1.24.x'
+        cache: true
+
+    - name: Install CMake
+      run: |
+        if [ "$RUNNER_OS" = "Linux" ]; then
+          sudo apt-get update
+          sudo apt-get install -y cmake
+        elif [ "$RUNNER_OS" = "macOS" ]; then
+          brew install cmake
+        fi
+      shell: bash
+      continue-on-error: true
+
+    - name: Install CMake (Windows)
+      if: runner.os == 'Windows'
+      run: choco install cmake
+      continue-on-error: true
+
+    - name: Build and Package
+      run: |
+        # 设置环境变量
+        export GOOS=${{ matrix.goos }}
+        export GOARCH=${{ matrix.goarch }}
+        export CGO_ENABLED=0
+        
+        # 创建输出目录
+        mkdir -p dist
+        
+        # 构建二进制文件
+        echo "Building for $GOOS/$GOARCH..."
+        go build -ldflags="-s -w" -o dist/${{ matrix.binary_name }} .
+        
+        # 创建打包目录
+        mkdir -p package_temp
+        
+        # 复制二进制文件到打包目录
+        cp dist/${{ matrix.binary_name }} package_temp/
+        
+        # 复制必需的配置文件
+        if [ -f ".env.example" ]; then
+          cp .env.example package_temp/.env
+        fi
+        
+        if [ -f "README.md" ]; then
+          cp README.md package_temp/
+        fi
+        
+        if [ -f "LICENSE" ]; then
+          cp LICENSE package_temp/
+        fi
+        
+        # 创建zip包
+        cd package_temp
+        if [ "$RUNNER_OS" = "Windows" ]; then
+          7z a "../${{ matrix.asset_name }}" *
+        else
+          zip -r "../${{ matrix.asset_name }}" *
+        fi
+        cd ..
+        
+        # 验证包文件
+        ls -la ${{ matrix.asset_name }}
+        file ${{ matrix.asset_name }} || echo "File type check skipped"
+      shell: bash
+      env:
+        GOOS: ${{ matrix.goos }}
+        GOARCH: ${{ matrix.goarch }}
+        CGO_ENABLED: 0
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ./${{ matrix.asset_name }}
+        asset_name: ${{ matrix.asset_name }}
+        asset_content_type: application/zip
+    if: ${{ !cancelled() }}
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: test
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+
+    - name: Generate Release Notes
+      id: release_notes
+      run: |
+        # 获取当前标签
+        TAG=${GITHUB_REF#refs/tags/}
+        REPO_NAME=${{ github.repository }}
+        
+        # 生成发布说明
+        echo "# What's Changed" > RELEASE_NOTES.md
+        echo "" >> RELEASE_NOTES.md
+        echo "- 此版本的常规更新和改进" >> RELEASE_NOTES.md
+        echo "- 性能优化和错误修复" >> RELEASE_NOTES.md
+        echo "- 用户体验改进" >> RELEASE_NOTES.md
+        echo "- 安全性增强" >> RELEASE_NOTES.md
+        echo "" >> RELEASE_NOTES.md
+        
+        # 获取最近的提交历史（如果可用）
+        if git log --oneline $(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "HEAD~1")..HEAD | grep -q .; then
+          echo "# Commits" >> RELEASE_NOTES.md
+          echo "" >> RELEASE_NOTES.md
+          git log --oneline $(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "HEAD~1")..HEAD >> RELEASE_NOTES.md
+          echo "" >> RELEASE_NOTES.md
+        fi
+        
+        echo "# Full Changelog" >> RELEASE_NOTES.md
+        echo "- https://github.com/$REPO_NAME/commits/$TAG" >> RELEASE_NOTES.md
+        echo "" >> RELEASE_NOTES.md
+        echo "# Contributors" >> RELEASE_NOTES.md
+        echo "- 感谢所有贡献者对本项目的支持" >> RELEASE_NOTES.md
+
+    - name: Create Release
+      id: create_release
+      uses: ncipollo/release-action@v1
+      with:
+        tag: ${{ github.ref_name }}
+        name: Release ${{ github.ref_name }}
+        bodyFile: "RELEASE_NOTES.md"
+        draft: false
+        prerelease: false
+        token: ${{ secrets.GITHUB_TOKEN }}
