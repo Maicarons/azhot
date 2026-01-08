@@ -1,0 +1,3 @@
+[submodule "azhot-ts"]
+	path = azhot-ts
+	url = https://github.com/Maicarons/azhot-ts.git

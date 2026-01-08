@@ -36,7 +36,7 @@ func WangyiNews() (map[string]interface{}, error) {
 		return nil, fmt.Errorf("HTTP请求失败,状态码: %d", resp.StatusCode)
 	}
 
-	pageBytes, _ := io.ReadAll(resp.Body)
+	pageBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("io.ReadAll error: %w", err)
 	}
