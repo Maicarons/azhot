@@ -37,6 +37,7 @@ jobs:
   build-and-package:
     name: Build and Package for ${{ matrix.target }}
     runs-on: ${{ matrix.os }}
+    needs: [test, create-release]  # 添加对 create-release 的依赖
     strategy:
       matrix:
         include:
