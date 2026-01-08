@@ -43,5 +43,6 @@ declare module 'vue' {
     PlatformList: typeof import('./src/components/PlatformList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    StarPrompt: typeof import('./src/components/StarPrompt.vue')['default']
   }
 }

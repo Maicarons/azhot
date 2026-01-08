@@ -1,5 +1,6 @@
 <template>
   <div class="platform-list">
+    <StarPrompt @close="() => {}" />
     <h2>所有平台列表</h2>
     <el-table 
       :data="platforms" 
@@ -33,6 +34,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import StarPrompt from './StarPrompt.vue'
 
 // 定义平台类型
 interface Platform {
@@ -50,6 +52,9 @@ axios.defaults.baseURL = BACKEND_BASE_URL
 
 export default {
   name: 'PlatformList',
+  components: {
+    StarPrompt
+  },
   setup() {
     const router = useRouter()
     const platforms = ref<Platform[]>([])

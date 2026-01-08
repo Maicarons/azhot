@@ -1,5 +1,6 @@
 <template>
   <div class="history-query">
+    <StarPrompt @close="() => {}" />
     <h2>历史记录查询</h2>
     
     <el-form :model="form" label-width="120px" class="query-form">
@@ -112,6 +113,7 @@
 <script lang="ts">
 import { ref } from 'vue'
 import axios from 'axios'
+import StarPrompt from './StarPrompt.vue'
 
 // 定义平台类型
 interface Platform {
@@ -138,6 +140,9 @@ interface HistoryItem {
 
 export default {
   name: 'HistoryQuery',
+  components: {
+    StarPrompt
+  },
   setup() {
     const form = ref<FormModel>({
       platform: '',

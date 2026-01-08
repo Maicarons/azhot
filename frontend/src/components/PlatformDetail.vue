@@ -1,5 +1,6 @@
 <template>
   <div class="platform-detail">
+    <StarPrompt @close="() => {}" />
     <el-page-header :content="platformTitle" @back="goBack" />
     
     <div v-if="loading" class="loading">
@@ -53,6 +54,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
+import StarPrompt from './StarPrompt.vue'
 
 // 定义平台数据类型
 interface PlatformItem {
@@ -75,6 +77,9 @@ axios.defaults.baseURL = BACKEND_BASE_URL
 
 export default {
   name: 'PlatformDetail',
+  components: {
+    StarPrompt
+  },
   props: {
     name: {
       type: String,

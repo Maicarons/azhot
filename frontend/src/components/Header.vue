@@ -14,15 +14,23 @@
           <el-menu-item index="/">首页</el-menu-item>
           <el-menu-item index="/platforms">平台列表</el-menu-item>
           <el-menu-item index="/history">历史记录查询</el-menu-item>
+          <el-menu-item index="github" @click="goToGitHub">
+            <el-icon><Link /></el-icon>
+            GitHub
+          </el-menu-item>
         </el-menu>
         <el-button 
-          :icon="isDarkMode ? Moon : Sunny" 
           @click="toggleDarkMode"
-          type="info"
-          :plain="!isDarkMode"
+          :type="isDarkMode ? 'warning' : 'primary'"
+          :plain="false"
           circle
           class="dark-mode-toggle ml-4"
-        />
+        >
+          <el-icon class="dark-mode-icon">
+            <Moon v-if="isDarkMode" />
+            <Sunny v-else />
+          </el-icon>
+        </el-button>
       </div>
     </div>
   </el-header>
@@ -31,7 +39,7 @@
 <script lang="ts">
 import { ref, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { Moon, Sunny } from '@element-plus/icons-vue'
+import { Moon, Sunny, Link } from '@element-plus/icons-vue'
 
 export default {
   name: 'Header',
@@ -45,53 +53,95 @@ export default {
       activeIndex.value = newPath
     })
 
-    // 检查本地存储中的主题设置
-    onMounted(() => {
-      const savedTheme = localStorage.getItem('theme')
-      if (savedTheme === 'dark') {
-        isDarkMode.value = true
-        document.documentElement.classList.add('dark')
-      } else {
-        isDarkMode.value = false
-        document.documentElement.classList.remove('dark')
-      }
-    })
-
+    // 切换暗色模式
     const toggleDarkMode = () => {
       isDarkMode.value = !isDarkMode.value
       if (isDarkMode.value) {
         document.documentElement.classList.add('dark')
-        localStorage.setItem('theme', 'dark')
       } else {
         document.documentElement.classList.remove('dark')
-        localStorage.setItem('theme', 'light')
       }
+    }
+
+    // 页面加载时检查系统偏好
+    onMounted(() => {
+      const prefersDark = window.matchMedia && 
+        window.matchMedia('(prefers-color-scheme: dark)').matches
+      isDarkMode.value = prefersDark
+      if (prefersDark) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+    })
+
+    // 跳转到GitHub仓库
+    const goToGitHub = () => {
+      window.open('https://github.com/Maicarons/azhot', '_blank')
     }
 
     return {
       activeIndex,
       isDarkMode,
       toggleDarkMode,
-      Moon,
-      Sunny
+      goToGitHub
     }
+  },
+  components: {
+    Moon,
+    Sunny,
+    Link
   }
 }
 </script>
 
 <style scoped>
-/* 暗色模式下的样式 */
+/* 暗色模式下的Header样式 */
 html.dark .el-header {
-  background-color: var(--el-bg-color-overlay);
-  color: var(--el-color-primary);
+  background-color: var(--el-bg-color);
+  border-bottom: 1px solid var(--el-border-color);
 }
 
-/* 暗色模式下标题颜色 */
-html.dark .header-content h1 {
-  color: var(--el-color-primary);
+/* 暗色模式下菜单项样式 */
+html.dark .el-menu {
+  background-color: transparent;
+  border: none;
 }
 
-.logo-icon {
-  margin-right: 8px;
+html.dark .el-menu-item {
+  color: var(--el-text-color-primary);
+}
+
+html.dark .el-menu-item.is-active {
+  color: var(--el-color-primary);
+  background-color: var(--el-fill-color-lighter);
+}
+
+html.dark .el-menu-item:hover {
+  color: var(--el-color-primary);
+  background-color: var(--el-fill-color-light);
+}
+
+/* 菜单项样式 */
+.el-menu-item {
+  font-size: 16px;
+}
+
+/* 暗色模式切换按钮图标样式 */
+.dark-mode-icon {
+  color: #fff;
+}
+
+html.dark .dark-mode-icon {
+  color: #000;
+}
+
+/* 暗色模式切换按钮样式 */
+.dark-mode-toggle {
+  opacity: 0.8;
+}
+
+.dark-mode-toggle:hover {
+  opacity: 1;
 }
 </style>

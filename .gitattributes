@@ -1,2 +1,41 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# 设置所有文本文件使用 LF 行分隔符
+* text=auto eol=lf
+
+# 特定文件类型设置
+*.go text eol=lf
+*.vue text eol=lf
+*.ts text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.py text eol=lf
+*.sh text eol=lf
+*.bat text eol=crlf
+
+# 配置文件
+*.conf text eol=lf
+*.ini text eol=lf
+*.toml text eol=lf
+
+# 忽略二进制文件
+*.bin binary
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.tar binary
+*.gz binary
+*.exe binary
+*.dll binary
+*.so binary
+*.a binary
+*.o binary
+*.obj binary

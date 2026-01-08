@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <StarPrompt @close="() => {}" />
     <h2>azhot</h2>
     <p>获取各大平台的实时热搜数据</p>
 
@@ -35,6 +36,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import StarPrompt from './StarPrompt.vue'
 
 // 定义平台类型
 interface Platform {
@@ -52,6 +54,9 @@ axios.defaults.baseURL = BACKEND_BASE_URL
 
 export default {
   name: 'Home',
+  components: {
+    StarPrompt
+  },
   setup() {
     const router = useRouter()
     const platforms = ref<Platform[]>([])
