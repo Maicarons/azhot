@@ -149,37 +149,37 @@ func (manager *WsManager) handleRequest(client *Client, source string) {
 	default:
 		// 使用映射来处理常规API调用，减少嵌套条件
 		apiSourceMap := map[string]string{
-			"360search":  "360search",
-			"bilibili":   "bilibili",
-			"acfun":      "acfun",
-			"csdn":       "csdn",
-			"dongqiudi":  "dongqiudi",
-			"douban":     "douban",
-			"douyin":     "douyin",
-			"github":     "github",
-			"guojiadili": "guojiadili",
+			"360search":    "360search",
+			"bilibili":     "bilibili",
+			"acfun":        "acfun",
+			"csdn":         "csdn",
+			"dongqiudi":    "dongqiudi",
+			"douban":       "douban",
+			"douyin":       "douyin",
+			"github":       "github",
+			"guojiadili":   "guojiadili",
 			"historytoday": "historytoday",
-			"hupu":       "hupu",
-			"ithome":     "ithome",
-			"lishipin":   "lishipin",
-			"pengpai":    "pengpai",
-			"qqnews":     "qqnews",
-			"shaoshupai": "shaoshupai",
-			"sougou":     "sougou",
-			"souhu":      "souhu",
-			"toutiao":    "toutiao",
-			"v2ex":       "v2ex",
-			"wangyinews": "wangyinews",
-			"weibo":      "weibo",
-			"xinjingbao": "xinjingbao",
-			"zhihu":      "zhihu",
-			"quark":      "quark",
-			"kuake":      "quark", // kuake映射到quark
-			"baidu":      "baidu",
-			"renmin":     "renmin",
-			"nanfang":    "nanfang",
-			"360doc":     "360doc",
-			"cctv":       "cctv",
+			"hupu":         "hupu",
+			"ithome":       "ithome",
+			"lishipin":     "lishipin",
+			"pengpai":      "pengpai",
+			"qqnews":       "qqnews",
+			"shaoshupai":   "shaoshupai",
+			"sougou":       "sougou",
+			"souhu":        "souhu",
+			"toutiao":      "toutiao",
+			"v2ex":         "v2ex",
+			"wangyinews":   "wangyinews",
+			"weibo":        "weibo",
+			"xinjingbao":   "xinjingbao",
+			"zhihu":        "zhihu",
+			"quark":        "quark",
+			"kuake":        "quark", // kuake映射到quark
+			"baidu":        "baidu",
+			"renmin":       "renmin",
+			"nanfang":      "nanfang",
+			"360doc":       "360doc",
+			"cctv":         "cctv",
 		}
 
 		if apiSource, exists := apiSourceMap[source]; exists {
@@ -209,7 +209,9 @@ func (manager *WsManager) handleRequest(client *Client, source string) {
 		response.Error = err.Error()
 	}
 
-	if err := client.Conn.WriteJSON(response); err != nil {
-		log.Error("发送响应失败: ", err)
+	if client.Conn != nil {
+		if err := client.Conn.WriteJSON(response); err != nil {
+			log.Error("发送响应失败: ", err)
+		}
 	}
 }

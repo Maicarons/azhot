@@ -118,11 +118,19 @@ add_custom_target(test
 )
 
 # 添加自定义目标：测试所有
-add_custom_target(test-all
-    COMMAND go test -v -coverprofile=coverage.out ./...
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMENT "Running all tests..."
-)
+if(WIN32)
+    add_custom_target(test-all
+        COMMAND cmd /c "chcp 65001 >nul && go test -v -coverprofile=coverage.out ./..."
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Running all tests..."
+    )
+else()
+    add_custom_target(test-all
+        COMMAND go test -v -coverprofile=coverage.out ./...
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Running all tests..."
+    )
+endif()
 
 # 添加自定义目标：格式化
 add_custom_target(fmt

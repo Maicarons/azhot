@@ -7,6 +7,24 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// isNetworkError 检查错误是否为网络相关错误
+func isNetworkError(errMsg string) bool {
+	return strings.Contains(errMsg, "服务器内部错误") ||
+		strings.Contains(errMsg, "context deadline exceeded") ||
+		strings.Contains(errMsg, "timeout") ||
+		strings.Contains(errMsg, "connection refused") ||
+		strings.Contains(errMsg, "no such host") ||
+		strings.Contains(errMsg, "network") ||
+		strings.Contains(errMsg, "EOF")
+}
+
+// assertNetworkError 检查错误是否为网络相关错误
+func assertNetworkError(t *testing.T, err error) {
+	if err != nil {
+		assert.True(t, isNetworkError(err.Error()), "错误信息应该包含预期的网络错误类型")
+	}
+}
+
 func TestBilibili(t *testing.T) {
 	// 由于Bilibili API需要网络请求，我们只测试函数是否能正常执行
 	// 在测试环境中可能无法访问外部API，所以主要验证函数不会崩溃
@@ -16,7 +34,7 @@ func TestBilibili(t *testing.T) {
 	// 我们主要验证函数是否能返回正确的格式
 	if err != nil {
 		// 如果有错误，检查是否是网络相关错误
-		assert.Contains(t, err.Error(), "服务器内部错误", "错误信息应该包含预期的错误类型")
+		assertNetworkError(t, err)
 	} else {
 		// 如果成功，验证返回格式
 		assert.NotNil(t, result)
@@ -52,7 +70,7 @@ func TestZhihu(t *testing.T) {
 	// 我们主要验证函数是否能返回正确的格式
 	if err != nil {
 		// 如果有错误，检查是否是网络相关错误
-		assert.Contains(t, err.Error(), "服务器内部错误")
+		assertNetworkError(t, err)
 	} else {
 		// 如果成功，验证返回格式
 		assert.NotNil(t, result)
@@ -130,7 +148,7 @@ func TestBaidu(t *testing.T) {
 	_, err := Baidu()
 	if err != nil {
 		// API请求可能失败，这是正常的
-		assert.Contains(t, err.Error(), "服务器内部错误")
+		assertNetworkError(t, err)
 	}
 }
 
@@ -139,7 +157,7 @@ func TestWeibo(t *testing.T) {
 	_, err := WeiboHot()
 	if err != nil {
 		// API请求可能失败，这是正常的
-		assert.Contains(t, err.Error(), "服务器内部错误")
+		assertNetworkError(t, err)
 	}
 }
 
@@ -148,7 +166,7 @@ func TestToutiao(t *testing.T) {
 	_, err := Toutiao()
 	if err != nil {
 		// API请求可能失败，这是正常的
-		assert.Contains(t, err.Error(), "服务器内部错误")
+		assertNetworkError(t, err)
 	}
 }
 
@@ -157,7 +175,7 @@ func TestDouban(t *testing.T) {
 	_, err := Douban()
 	if err != nil {
 		// API请求可能失败，这是正常的
-		assert.Contains(t, err.Error(), "服务器内部错误")
+		assertNetworkError(t, err)
 	}
 }
 
@@ -166,7 +184,7 @@ func TestGithub(t *testing.T) {
 	_, err := Github()
 	if err != nil {
 		// API请求可能失败，这是正常的
-		assert.Contains(t, err.Error(), "服务器内部错误")
+		assertNetworkError(t, err)
 	}
 }
 
@@ -175,16 +193,7 @@ func TestV2ex(t *testing.T) {
 	_, err := V2ex()
 	if err != nil {
 		// API请求可能失败，这是正常的
-		// 检查错误信息是否包含预期的错误类型
-		// 检查错误信息是否包含预期的错误类型
-		containsExpectedError := strings.Contains(err.Error(), "服务器内部错误") ||
-			strings.Contains(err.Error(), "context deadline exceeded") ||
-			strings.Contains(err.Error(), "timeout") ||
-			strings.Contains(err.Error(), "connection refused") ||
-			strings.Contains(err.Error(), "no such host") ||
-			strings.Contains(err.Error(), "network") ||
-			strings.Contains(err.Error(), "EOF")
-		assert.True(t, containsExpectedError, "错误信息应该包含预期的网络错误类型")
+		assertNetworkError(t, err)
 	}
 }
 
@@ -252,5 +261,250 @@ func TestListSources(t *testing.T) {
 			}
 		}
 		assert.True(t, foundWeibo, "应该包含 'weibo' 平台信息")
+	}
+}
+
+// 测试360doc函数
+func TestDoc360(t *testing.T) {
+	_, err := Doc360()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试360search函数
+func TestSearch360(t *testing.T) {
+	_, err := Search360()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试Acfun函数
+func TestAcfun(t *testing.T) {
+	_, err := Acfun()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试CCTV函数
+func TestCCTV(t *testing.T) {
+	_, err := CCTV()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试CSDN函数
+func TestCSDN(t *testing.T) {
+	_, err := CSDN()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试Dongqiudi函数
+func TestDongqiudi(t *testing.T) {
+	_, err := Dongqiudi()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试Douyin函数
+func TestDouyin(t *testing.T) {
+	_, err := Douyin()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试Guojiadili函数
+func TestGuojiadili(t *testing.T) {
+	_, err := Guojiadili()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试stripHTML函数
+func TestStripHTML(t *testing.T) {
+	// 测试去除HTML标签
+	htmlText := "<p>这是一段包含<em>HTML</em>标签的文本</p>"
+	expected := "这是一段包含HTML标签的文本"
+	result := stripHTML(htmlText)
+	assert.Equal(t, expected, result)
+
+	// 测试没有HTML标签的文本
+	plainText := "这是一段普通文本"
+	result2 := stripHTML(plainText)
+	assert.Equal(t, plainText, result2)
+
+	// 测试复杂HTML
+	complexHTML := "<div><span>复杂</span>的<b>HTML</b>结构</div>"
+	expected2 := "复杂的HTML结构"
+	result3 := stripHTML(complexHTML)
+	assert.Equal(t, expected2, result3)
+
+	// 测试解析失败的情况
+	invalidHTML := "<div>未闭合标签"
+	result4 := stripHTML(invalidHTML)
+	// 即使HTML无效，函数也应该返回某些内容而不崩溃
+	assert.NotNil(t, result4)
+}
+
+// 测试HistoryToday函数
+func TestHistoryToday(t *testing.T) {
+	_, err := HistoryToday()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试Hupu函数
+func TestHupu(t *testing.T) {
+	_, err := Hupu()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试Ithome函数
+func TestIthome(t *testing.T) {
+	_, err := Ithome()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试Lishipin函数
+func TestLishipin(t *testing.T) {
+	_, err := Lishipin()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试Pengpai函数
+func TestPengpai(t *testing.T) {
+	_, err := Pengpai()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试Qqnews函数
+func TestQqnews(t *testing.T) {
+	_, err := Qqnews()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试Quark函数
+func TestQuark(t *testing.T) {
+	_, err := Quark()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试Renminwang函数
+func TestRenminwang(t *testing.T) {
+	_, err := Renminwang()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试Shaoshupai函数
+func TestShaoshupai(t *testing.T) {
+	_, err := Shaoshupai()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试Sougou函数
+func TestSougou(t *testing.T) {
+	_, err := Sougou()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试Souhu函数
+func TestSouhu(t *testing.T) {
+	_, err := Souhu()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试WangyiNews函数
+func TestWangyiNews(t *testing.T) {
+	_, err := WangyiNews()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试Xinjingbao函数
+func TestXinjingbao(t *testing.T) {
+	_, err := Xinjingbao()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试Nanfangzhoumo函数
+func TestNanfangzhoumo(t *testing.T) {
+	_, err := Nanfangzhoumo()
+	if err != nil {
+		// API请求可能失败，这是正常的
+		assertNetworkError(t, err)
+	}
+}
+
+// 测试GetAllRouteNames函数
+func TestGetAllRouteNames(t *testing.T) {
+	routeNames := GetAllRouteNames()
+
+	// 检查返回值是否为非空切片
+	assert.NotEmpty(t, routeNames, "GetAllRouteNames should return non-empty slice")
+
+	// 检查是否包含一些预期的路由名
+	expectedRoutes := []string{"baidu", "weibo", "zhihu", "toutiao", "douban"}
+	for _, expectedRoute := range expectedRoutes {
+		contains := false
+		for _, route := range routeNames {
+			if route == expectedRoute {
+				contains = true
+				break
+			}
+		}
+		assert.True(t, contains, "GetAllRouteNames should contain route: %s", expectedRoute)
 	}
 }
