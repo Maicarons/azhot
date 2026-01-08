@@ -10,7 +10,7 @@
   <img src="banner.jpg" alt="Banner" style="max-width:100%;height:auto;" />
 </p>
 
-[![Go Version](https://img.shields.io/badge/Go-%3E%3D1.18-blue)](https://golang.org/)
+[![Go Version](https://img.shields.io/badge/Go-%3E%3D1.24-blue)](https://golang.org/)
 [![License](https://img.shields.io/github/license/maicarons/azhot)](LICENSE)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://golang.org/)
 [![Go Report Card](https://goreportcard.com/badge/github.com/maicarons/azhot)](https://goreportcard.com/report/github.com/maicarons/azhot)
@@ -28,13 +28,17 @@
 
 ---
 
-
-
-
-
 > 一个提供各大平台热搜API的聚合服务
 
+## 🚀 新增：TypeScript 版本
 
+我们还提供了基于 TypeScript + Elysia.js 的版本 [azhot-ts](https://github.com/Maicarons/azhot-ts)。如果你更喜欢使用 TypeScript 进行开发，可以查看此版本：
+
+- 使用 TypeScript + Elysia.js 框架构建
+- 提供与 Go 版本相同的功能特性
+- 支持 WebSocket 实时数据推送
+- 支持 AI Model Context Protocol (MCP) 服务器
+- 模块化架构，易于扩展新平台
 
 ## 📖 目录
 
@@ -64,7 +68,8 @@
 - 🤖 **新增** 支持AI Model Context Protocol (MCP) 服务器
 
 ## 项目结构
-```
+
+```bash
 azhot/
 ├── all/                 # all功能代码
 ├── app/                 # 主程序代码
@@ -117,6 +122,12 @@ azhot/
 | 新京报 | xinjingbao | ✅ |
 | 知乎 | zhihu | ✅ |
 
+> [!WARNING]  
+> 2026年1月9日发现CSDN有反爬虫验证机制，可能影响数据获取。
+
+> [!NOTE]  
+> GitHub和V2EX可能在内地网络环境下无法正常访问，导致相关接口数据获取失败。
+
 ## 快速开始
 
 ### 环境要求
@@ -127,17 +138,20 @@ azhot/
 ### 安装步骤
 
 1. 克隆项目
+
 ```bash
 git clone https://github.com/maicarons/azhot.git
 cd azhot
 ```
 
 2. 安装依赖
+
 ```bash
 go mod tidy
 ```
 
 3. 配置环境
+
 ```bash
 # 复制配置文件
 cp .env.example .env
@@ -146,11 +160,13 @@ vim .env
 ```
 
 4. 生成API文档
+
 ```bash
 swag init
 ```
 
 5. 运行项目
+
 ```bash
 # 开发模式运行
 make dev
@@ -174,6 +190,7 @@ docker run -d -p 8080:8080 azhot
 项目使用 `.env` 文件进行配置，以下是可用的环境变量：
 
 #### 服务器配置
+
 - `SERVER_HOST`: 服务器主机地址，默认为 `localhost`
 - `SERVER_PORT`: 服务器端口，默认为 `8080`
 - `TLS_ENABLED`: 是否启用TLS/HTTPS，默认为 `false`
@@ -181,18 +198,22 @@ docker run -d -p 8080:8080 azhot
 - `TLS_KEY_FILE`: TLS私钥文件路径，当 `TLS_ENABLED` 为 `true` 时必须提供
 
 #### 数据库配置
+
 - `DB_TYPE`: 数据库类型，支持 `sqlite` 和 `mysql`，默认为 `sqlite`
 - `MYSQL_DSN`: MySQL 数据库连接字符串，当 `DB_TYPE` 为 `mysql` 时生效
 
 #### MCP 配置
+
 - `MCP_STDIO_ENABLED`: 是否启用 STDIO MCP 服务器，默认为 `false`
 - `MCP_HTTP_ENABLED`: 是否启用 HTTP MCP 服务器，默认为 `false`
 - `MCP_PORT`: HTTP MCP 服务器端口，默认为 `8081`
 
 #### 调试配置
+
 - `DEBUG`: 是否启用调试模式，默认为 `false`
 
 #### CORS 配置
+
 - `CORS_ALLOW_ORIGINS`: 允许的跨域请求来源，多个来源用逗号分隔，默认为空表示允许所有来源（仅在生产环境中推荐设置具体来源）
 
 ## API使用方法
@@ -201,7 +222,7 @@ docker run -d -p 8080:8080 azhot
 
 #### 获取所有平台列表
 
-```
+```http
 GET /list
 ```
 
@@ -209,12 +230,13 @@ GET /list
 
 #### 获取特定平台热搜
 
-```
+```http
 GET /{platform}
 ```
 
 例如获取微博热搜：
-```
+
+```http
 GET /zhihu
 ```
 
@@ -224,7 +246,7 @@ GET /zhihu
 
 #### 通用WebSocket端点
 
-```
+```http
 ws://localhost:8080/ws
 ```
 
@@ -232,12 +254,13 @@ ws://localhost:8080/ws
 
 #### 特定平台WebSocket端点
 
-```
+```http
 ws://localhost:8080/ws/{platform}
 ```
 
 例如连接百度热搜WebSocket：
-```
+
+```http
 ws://localhost:8080/ws/baidu
 ```
 
@@ -328,6 +351,7 @@ MCP_PORT=8081               # HTTP MCP服务器端口
 ### 使用示例
 
 通过HTTP调用MCP工具：
+
 ```bash
 curl -X POST http://localhost:8080/mcp/tool/execute \
   -H "Content-Type: application/json" \
@@ -433,6 +457,7 @@ cmake --build . --target build-ci
 项目包含一个自动化的发布流程，支持在GitHub上自动创建发布版本并打包适用于不同平台的zip文件。该流程支持Windows、Linux和macOS三个平台，并为每个平台创建相应的zip压缩包，包含二进制文件和必要的配置文件。
 
 主要特性：
+
 - 自动构建三个平台的二进制文件（Linux amd64, Windows amd64, macOS amd64）
 - 为每个平台创建zip包，包含二进制文件、配置文件、README和LICENSE
 - 自动发布到GitHub Releases

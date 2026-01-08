@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -77,10 +78,22 @@ func Douban() (map[string]interface{}, error) {
 			hotValue = fmt.Sprintf("%.2f万", item.Score/10000)
 		}
 
+		// 转换链接格式：将 douban://douban.com/search/result?q=... 格式转换为 https://www.douban.com/search?q=... 格式
+		convertedURL := item.URI
+		if strings.HasPrefix(item.URI, "douban://douban.com/search/result") {
+			// 提取查询参数部分
+			queryStart := strings.Index(item.URI, "?")
+			if queryStart != -1 {
+				convertedURL = "https://www.douban.com/search" + item.URI[queryStart:]
+			} else {
+				convertedURL = "https://www.douban.com/search"
+			}
+		}
+
 		obj = append(obj, map[string]interface{}{
 			"index":    index + 1,
 			"title":    item.Name,
-			"url":      item.URI,
+			"url":      convertedURL,
 			"hotValue": hotValue,
 		})
 	}
