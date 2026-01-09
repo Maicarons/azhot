@@ -21,7 +21,7 @@
           <ul class="list-none p-0 m-0 space-y-2">
             <li>
               <router-link to="/"
-                class="color-$el-text-color-regular text-decoration-none transition-colors-300ms flex items-center justify-center hover:color-$el-color-primary">
+                class="color-$el-text-color-regular no-underline transition-colors-300ms flex items-center justify-center hover:color-$el-color-primary">
                 <el-icon :size="16" class="icon mr-[8px] vertical-align-middle">
                   <House />
                 </el-icon>
@@ -30,7 +30,7 @@
             </li>
             <li>
               <router-link to="/platforms"
-                class="color-$el-text-color-regular text-decoration-none transition-colors-300ms flex items-center justify-center hover:color-$el-color-primary">
+                class="color-$el-text-color-regular no-underline transition-colors-300ms flex items-center justify-center hover:color-$el-color-primary">
                 <el-icon :size="16" class="icon mr-[8px] vertical-align-middle">
                   <Menu />
                 </el-icon>
@@ -39,7 +39,7 @@
             </li>
             <li>
               <router-link to="/history"
-                class="color-$el-text-color-regular text-decoration-none transition-colors-300ms flex items-center justify-center hover:color-$el-color-primary">
+                class="color-$el-text-color-regular no-underline transition-colors-300ms flex items-center justify-center hover:color-$el-color-primary">
                 <el-icon :size="16" class="icon mr-[8px] vertical-align-middle">
                   <Clock />
                 </el-icon>
@@ -57,7 +57,7 @@
           <ul class="list-none p-0 m-0 space-y-2">
             <li>
               <a href="https://github.com/maicarons/azhot" target="_blank"
-                class="color-$el-text-color-regular text-decoration-none transition-colors-300ms flex items-center justify-center hover:color-$el-color-primary">
+                class="color-$el-text-color-regular no-underline transition-colors-300ms flex items-center justify-center hover:color-$el-color-primary">
                 <el-icon :size="16" class="icon mr-[8px] vertical-align-middle">
                   <Link />
                 </el-icon>
@@ -66,7 +66,7 @@
             </li>
             <li>
               <a href="https://github.com/maicarons/azhot/blob/main/README.md" target="_blank"
-                class="color-$el-text-color-regular text-decoration-none transition-colors-300ms flex items-center justify-center hover:color-$el-color-primary">
+                class="color-$el-text-color-regular no-underline transition-colors-300ms flex items-center justify-center hover:color-$el-color-primary">
                 <el-icon :size="16" class="icon mr-[8px] vertical-align-middle">
                   <Document />
                 </el-icon>
@@ -75,7 +75,7 @@
             </li>
             <li>
               <a href="https://github.com/maicarons/azhot/issues" target="_blank"
-                class="color-$el-text-color-regular text-decoration-none transition-colors-300ms flex items-center justify-center hover:color-$el-color-primary">
+                class="color-$el-text-color-regular no-underline transition-colors-300ms flex items-center justify-center hover:color-$el-color-primary">
                 <el-icon :size="16" class="icon mr-[8px] vertical-align-middle">
                   <ChatLineRound />
                 </el-icon>
@@ -92,7 +92,7 @@
           </h4>
           <div class="social-links mb-4 flex justify-center space-x-4">
             <a href="https://github.com/maicarons/azhot" target="_blank" title="GitHub"
-              class="w-10 h-10 rounded-full bg-$el-bg-color-overlay flex items-center justify-center hover:bg-$el-color-primary hover:text-$el-color-white transition-colors-300ms">
+              class="w-10 h-10 rounded-full bg-$el-bg-color-overlay flex items-center justify-center hover:bg-$el-color-primary hover:text-$el-color-white transition-colors-300ms no-underline">
               <el-icon :size="20">
                 <Link />
               </el-icon>
@@ -103,6 +103,14 @@
             © 2026 Maicarons
           </p>
         </div>
+      </div>
+      <div class="disclaimer mt-[20px] pt-[20px] border-t border-$el-border-color text-center pb-[15px]">
+        <p class="color-$el-text-color-placeholder text-0.8rem">
+          本网站仅提供内容聚合服务，展示各大平台的热搜信息，所有数据均来源于相应平台的公开接口。
+        </p>
+        <p class="color-$el-text-color-placeholder text-0.8rem mt-[8px]">
+          本网站不对所展示内容的真实性、准确性、合法性负责，亦不认可其中任何观点或立场。
+        </p>
       </div>
     </div>
   </el-footer>
@@ -147,6 +155,10 @@ html.dark .copyright {
   border-top: 1px solid var(--el-border-color);
 }
 
+html.dark .disclaimer p {
+  color: var(--el-text-color-placeholder);
+}
+
 html.dark .footer-section a:hover {
   color: var(--el-color-primary);
 }
@@ -171,6 +183,10 @@ html.dark .social-links a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  
+  .disclaimer {
+    text-align: center;
   }
 }
 </style>
